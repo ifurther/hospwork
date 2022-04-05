@@ -22,6 +22,6 @@ for i, item in enumerate(tables):
         print('#{}召聘職稱: {} 召聘單位: {}\n 期限: {}\n 連結：{}{}'.format(i+1, title, origantion, dead_line, url_base, s.get('href')))
         work_table.append([i-2, title, origantion, dead_line, url_base+s.get('href')])
 
-work_table=pd.DataFrame(work_table, columns=['no','召聘職稱','召聘單位','期限' ,'連結']))
+work_table=pd.DataFrame(work_table, columns=['no','召聘職稱','召聘單位','期限' ,'連結'])
 
 print(work_table)
