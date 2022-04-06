@@ -9,16 +9,31 @@ url=url_base+url_work_table
 g=requests.get(url)
 soup=BeautifulSoup(g.content, 'html.parser')
 
-pages=soup.find_all('ul' ,class_="layout__pagination ul-reset")
-for i, item in enumerate(pages[0]):
-    if item.find('a'):
-      print(item.string)
+pages=soup.find_all('ul' ,class_="layout__pagination ul-reset")[0]
+def get_pages(pages):
+  counter=0
+  for i, item in enumerate(pages):
+      if item.find('a') :
+        s = item.find('a')
+        counter += 1
+        try:
+          #print(s.get("href") ,s.string)
+          if s.get("href") == "javascript:void(0)":
+            counter -= 1
+        except:
+          counter -= 1
+          #print(item,'error')
+      
+  return counter
+get_pages(pages)
 
 tables = soup.find('div',class_="bg-grey pd100").find_all('ul')[-2].find_all('li')
 
-def get_work_detail():
+def get_work_dead_line():
     work_detail_web = soup.find('article').get_text().replace("\xa0","").replace('\n',"").replace("\u3000","")
     dead_line = work_detail_web.rsplit("報名期限")[1].split("截止")[0].replace("：","")
+    return dead_line
+
 work_table=[]
 for i, item in enumerate(tables):
     if item.find('a'): #過濾掉被刪除的文章
