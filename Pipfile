@@ -12,6 +12,7 @@ pandas = "*"
 requests = "*"
 html5lib = "*"
 lxml = "*"
+altair = "*"
 
 [requires]
 python_version = "3.8"
