@@ -21,7 +21,8 @@ def get_ntuh_work_table_one_page(ntu_work_data,work_table):
     for i, item in enumerate(ntu_work_data['queryList']):
         title = item['title']
         origantion = item['jobDepno']
-        dead_line = item['odate']
+        begin_date = item['adate_sh']
+        dead_line = item['edatestr']
         
         if item['recruitNo']:
             link = 'https://reg.ntuh.gov.tw/WebApplication/Administration/NtuhGeneralSelect/Entry.aspx?selectno='+item['recruitNo']
