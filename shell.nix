@@ -1,5 +1,5 @@
 { pkgs ? import (builtins.fetchTarball {
-    url = https://github.com/nixos/nixpkgs/archive/a7ecde854aee5c4c7cd6177f54a99d2c1ff28a31.tar.gz;
+    url = https://github.com/nixos/nixpkgs/archive/f67c61e0d507ed352e33be64d0d02b9d6be0488b.tar.gz;
     sha256="162dywda2dvfj1248afxc45kcrg83appjd0nmdb541hl7rnncf02";
   }) {}
 }:
@@ -8,6 +8,8 @@
 let
   r_pkgs = with pkgs.rPackages; [
     # rmarkdown-related packages.
+    ggplot2
+    dplyr
     knitr
     rmarkdown
     tidyverse
