@@ -24,8 +24,7 @@ let
   python_pkgs = python38.withPackages (ps: [
     pipenv
     jupyter
-    ];
-  );
+    ]);
 in
 pkgs.mkShell {
   name = "dev-shell";
