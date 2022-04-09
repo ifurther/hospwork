@@ -24,12 +24,14 @@ let
   python_pkgs = withpython38Packages; [
     pipenv
     jupyter
-    ];
+  ];
 in
 pkgs.mkShell {
   name = "dev-shell";
   buildInputs = [ 
-    python_pkgs
+    (pkgs.pythonWrapper.override {
+      packages = python_pkgs;
+    })
 
     (pkgs.rWrapper.override {
       packages = r_pkgs;
