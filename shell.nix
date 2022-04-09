@@ -22,17 +22,16 @@ let
     # })
   ];
 
-  python_pkgs = with pkgs.python38Packages; [
-    pipenv
-    jupyter
+  python_pkgs = python38.withPackages (ps: [
+    ps.pipenv
+    ps.jupyter
   ];
 in
 pkgs.mkShell {
   name = "dev-shell";
   buildInputs = [ 
-    (pkgs.pythonWrapper.override {
-      packages = python_pkgs;
-    })
+
+    python_pkgs
 
     (pkgs.rWrapper.override {
       packages = r_pkgs;
