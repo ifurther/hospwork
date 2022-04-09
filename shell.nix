@@ -22,9 +22,9 @@ let
     # })
   ];
 
-  python_pkgs = pkgs.python38.withPackages (ps: [
-    ps.pipenv
-    ps.jupyter
+  python_pkgs = pkgs.python38.withPackages (ps: with ps; [
+    pipenv
+    jupyter
   ]);
 in
 pkgs.mkShell {
