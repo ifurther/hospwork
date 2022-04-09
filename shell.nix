@@ -22,7 +22,6 @@ let
 
   ];
 in
-
 pkgs.mkShell {
   name = "dev-shell";
   buildInputs = [ 
