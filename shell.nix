@@ -30,8 +30,6 @@ pkgs.mkShell {
     pkgs.pipenv
     pkgs.jupyter
     pkgs.ipython
-
-    pkgs.pandoc
     (pkgs.rWrapper.override {
       packages = r_pkgs;
     })
