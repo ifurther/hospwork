@@ -28,7 +28,7 @@ pkgs.mkShell {
     pkgs.python38Full
     pkgs.pipenv
     pkgs.jupyter
-    pkgs.ipython
+
     (pkgs.rWrapper.override {
       packages = r_pkgs;
     })
