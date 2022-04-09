@@ -14,6 +14,12 @@ let
     viridis
     # Rstudio-related packages.
     # servr
+
+    # Uncomment to add RStudio in your environment.
+    # (pkgs.rstudioWrapper.override {
+    #  packages = r_pkgs;
+    # })
+
   ];
 in
 
