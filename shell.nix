@@ -29,7 +29,7 @@ in
 pkgs.mkShell {
   name = "dev-shell";
   buildInputs = [ 
-    pipenv
+    pkgs.pipenv
     python_pkgs
 
     (pkgs.rWrapper.override {
