@@ -21,7 +21,8 @@ let
     #  packages = r_pkgs;
     # })
   ];
-  python_pkgs = withpython38Packages; [
+
+  python_pkgs = with pkgs.python38Packages; [
     pipenv
     jupyter
   ];
