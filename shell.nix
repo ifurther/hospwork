@@ -23,14 +23,13 @@ let
   ];
 
   python_pkgs = pkgs.python38.withPackages (ps: with ps; [
-    pipenv
     jupyter
   ]);
 in
 pkgs.mkShell {
   name = "dev-shell";
   buildInputs = [ 
-
+    pipenv
     python_pkgs
 
     (pkgs.rWrapper.override {
