@@ -35,3 +35,9 @@ pkgs.mkShell {
     })
   ];
 }
+
+with import <nixpkgs> {};
+sedenv.mkDerivation {
+  name = "hospwork-env";
+  buildInputs = [ python38 pipenv ];
+}
