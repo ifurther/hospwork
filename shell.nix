@@ -35,8 +35,3 @@ pkgs.mkShell {
     })
   ];
 }
-
-sedenv.mkDerivation {
-  name = "hospwork-env";
-  buildInputs = [ python38 pipenv ];
-}
