@@ -22,7 +22,7 @@ let
     # })
   ];
 
-  python_pkgs = python38.withPackages (ps: [
+  python_pkgs = pkgs.python38.withPackages (ps: [
     ps.pipenv
     ps.jupyter
   ]);
