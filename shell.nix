@@ -23,7 +23,8 @@ let
   ];
 
   python_pkgs = pkgs.python38.withPackages (ps: with ps; [
-    jupyter
+    pyflakes
+    pytest
   ]);
 in
 pkgs.mkShell {
