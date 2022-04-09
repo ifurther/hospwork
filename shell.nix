@@ -12,6 +12,7 @@ let
     rmarkdown
     tidyverse
     viridis
+    tinytex
     # Rstudio-related packages.
     # servr
 
