@@ -20,15 +20,16 @@ let
     # (pkgs.rstudioWrapper.override {
     #  packages = r_pkgs;
     # })
-
+  ];
+  python_pkgs = python38.withPackages (ps: [
+    pipenv
+    jupyter
   ];
 in
 pkgs.mkShell {
   name = "dev-shell";
   buildInputs = [ 
-    pkgs.python38Full
-    pkgs.pipenv
-    pkgs.jupyter
+    python_pkgs
 
     (pkgs.rWrapper.override {
       packages = r_pkgs;
