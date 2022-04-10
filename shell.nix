@@ -6,30 +6,6 @@
 
 
 let
-  #r_pkgs = with pkgs.rPackages; [
-    # rmarkdown-related packages.
-    #ggplot2
-    #dplyr
-    #knitr
-    #rmarkdown
-    #tidyverse
-    #viridis
-    #tinytex
-    #irkernel
-    # Rstudio-related packages.
-    # servr
-
-    # Uncomment to add RStudio in your environment.
-    # (pkgs.rstudioWrapper.override {
-    #  packages = r_pkgs;
-    # })
-  #];
-
-  #python_pkgs = pkgs.python38.withPackages (ps: with ps; [
-  #  pyflakes
-  #  pytest
-  #  rpy2
-  #]);
 
   jupyter = import (builtins.fetchGit {
     url = https://github.com/tweag/jupyterWith;
@@ -56,10 +32,11 @@ let
       ];                                           
     };
 
-  jupyterEnvironment = (jupyter.jupyterlabWith {                                
+  jupyterEnvironment = jupyter.jupyterlabWith {                                
       kernels = [ iPython irkernel ];             
-    }); 
+    }; 
 in
+
 jupyterEnvironment.env
 pkgs.mkShell {
   name = "dev-shell";
