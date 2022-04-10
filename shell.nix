@@ -12,6 +12,9 @@ let
     rev = "45f9a774e981d3a3fb6a1e1269e33b4624f9740e";
   }) {};
 
+  overlays = [
+    (import "${jupyterWithPath}/nix/python-overlay.nix")
+  ];
   iPython = jupyter.kernels.iPythonWith {
     name = "python";
     packages = p: with p; [ pytest pyflakes pipenv];
