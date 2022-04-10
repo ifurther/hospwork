@@ -1,4 +1,6 @@
 let
+  pkgs = import <nixpkgs> {};
+  python = pkgs.python38Packages;
 
   jupyter = import (builtins.fetchGit {
     url = https://github.com/tweag/jupyterWith;
@@ -8,7 +10,7 @@ let
 
   iPython = jupyter.kernels.iPythonWith {
     name = "python";
-    packages = p: with p; [ python38 pytest pyflakes pipenv];
+    packages = p: with p; [ pytest pyflakes pipenv];
   };
 
   irkernel = jupyter.kernels.iRWith {                
