@@ -21,7 +21,7 @@ let
 
   iPython = jupyter.kernels.iPythonWith {
     name = "python";
-    packages = p: with p; [ pytest pyflakes pipenv];
+    packages = p: with p; [ pytest pyflakes ];
     python3 = pkgs.python38Packages;
   };
 
