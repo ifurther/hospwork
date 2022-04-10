@@ -6,16 +6,16 @@
 
 
 let
-  r_pkgs = with pkgs.rPackages; [
+  #r_pkgs = with pkgs.rPackages; [
     # rmarkdown-related packages.
-    ggplot2
-    dplyr
-    knitr
-    rmarkdown
-    tidyverse
-    viridis
-    tinytex
-    irkernel
+    #ggplot2
+    #dplyr
+    #knitr
+    #rmarkdown
+    #tidyverse
+    #viridis
+    #tinytex
+    #irkernel
     # Rstudio-related packages.
     # servr
 
@@ -23,13 +23,13 @@ let
     # (pkgs.rstudioWrapper.override {
     #  packages = r_pkgs;
     # })
-  ];
+  #];
 
-  python_pkgs = pkgs.python38.withPackages (ps: with ps; [
-    pyflakes
-    pytest
-    rpy2
-  ]);
+  #python_pkgs = pkgs.python38.withPackages (ps: with ps; [
+  #  pyflakes
+  #  pytest
+  #  rpy2
+  #]);
 
   jupyter = import (builtins.fetchGit {
     url = https://github.com/tweag/jupyterWith;
@@ -39,15 +39,21 @@ let
 
   iPython = jupyter.kernels.iPythonWith {
     name = "python";
-    packages = p: with p; [ numpy ];
+    packages = p: with p; [ python38 pytest pyflakes ];
   };
 
   irkernel = jupyter.kernels.iRWith {                
       name = "nixpkgs";                                                         
       # Libraries to be available to the kernel.                                
-      packages = r_pkgs; # p: with p; [ 
-        #ggplot2                                                          
-      #];                                           
+      packages = p: with p; [ 
+        ggplot2
+        dplyr
+        knitr
+        rmarkdown
+        tidyverse
+        viridis
+        tinytex
+      ];                                           
     };
 
   jupyterEnvironment = (jupyter.jupyterlabWith {                                
