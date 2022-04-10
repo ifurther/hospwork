@@ -27,6 +27,7 @@ let
   python_pkgs = pkgs.python38.withPackages (ps: with ps; [
     pyflakes
     pytest
+    rpy2
   ]);
 in
 pkgs.mkShell {
