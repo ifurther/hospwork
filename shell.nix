@@ -1,3 +1,9 @@
+{ pkgs ? import (builtins.fetchTarball {
+    url = https://github.com/nixos/nixpkgs/archive/0d95d03c98f2ecef7c721cb6e0a638bbbff44d0a.tar.gz;
+    sha256="162dywda2dvfj1248afxc45kcrg83appjd0nmdb541hl7rnncf02";
+  }) {}
+}:
+
 let
 
   jupyter = import (builtins.fetchGit {
