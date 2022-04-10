@@ -8,7 +8,7 @@ let
 
   iPython = jupyter.kernels.iPythonWith {
     name = "python";
-    packages = p: with p; [ python38 pytest pyflakes ];
+    packages = p: with p; [ python38 pytest pyflakes pipenv];
   };
 
   irkernel = jupyter.kernels.iRWith {                
@@ -31,14 +31,3 @@ let
 in
 
 jupyterEnvironment.env
-pkgs.mkShell {
-  name = "dev-shell";
-  buildInputs = [ 
-    pkgs.pipenv
-    #python_pkgs
-
-    #(pkgs.rWrapper.override {
-    #  packages = r_pkgs;
-    #})
-  ];
-}
