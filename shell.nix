@@ -15,6 +15,7 @@ let
     tidyverse
     viridis
     tinytex
+    irkernel
     # Rstudio-related packages.
     # servr
 
