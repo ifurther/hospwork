@@ -40,7 +40,8 @@ let
     };
 
   jupyterEnvironment = jupyter.jupyterlabWith {                                
-      kernels = [ iPython irkernel ];             
+      kernels = [ iPython irkernel ];
+      extraPackages = pp: [pp.pipenv pp.pandoc];
     }; 
 in
 
