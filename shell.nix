@@ -15,7 +15,10 @@ let
   overlays = [
     (import "${jupyterWithPath}/nix/python-overlay.nix")
   ];
+
+  pkgs = import <nixpkgs> { inherit overlays; };
   jupyter = pkgs.jupyterWith;
+
   iPython = jupyter.kernels.iPythonWith {
     name = "python";
     packages = p: with p; [ pytest pyflakes pipenv];
