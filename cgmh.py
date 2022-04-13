@@ -30,7 +30,7 @@ get_pages(pages)
 
 tables = soup.find('div',class_="bg-grey pd100").find_all('ul')[-2].find_all('li')
 
-def get_work_dead_line( soup):  
+def get_work_dead_line( soup):
   work_detail_web = soup.find('article').get_text().replace("\xa0","").replace('\n',"").replace("\u3000","")
   if '額滿為止' in work_detail_web:
     return '額滿為止'
