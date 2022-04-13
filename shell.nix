@@ -46,7 +46,7 @@ pkgs.mkShell {
 
     export VIRTUAL_ENV=$(pipenv --venv)
     export PIPENV_ACTIVE=1
-    export PYTHONPATH="$VIRTUAL_ENV/${python3.sitePackages}:$PYTHONPATH"
+    export PYTHONPATH="$VIRTUAL_ENV/${python38.sitePackages}:$PYTHONPATH"
     export PATH="$VIRTUAL_ENV/bin:$PATH"
   '';
 }
