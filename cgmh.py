@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 import requests
 import pandas as pd
 from urllib.parse import urlparse
+from hospwork.tool import get_work_page
 
 url_base='https://www.cgmh.org.tw/tw/Systems/'
 url_work_table='RecruitInfo/3'
@@ -40,12 +41,6 @@ def get_work_dead_line( soup):
   else:
     dead_line = work_detail_web.rsplit("報名期限")[1].split("截止")[0].replace("：","")
     return dead_line
-      
-
-def get_work_page(page):
-    g=requests.get(url+'?page='+str(page))
-    soup=BeautifulSoup(g.content, 'html.parser')
-    return soup
 
 def get_work_detail(link):
     g=requests.get(link)
@@ -66,7 +61,7 @@ def get_work_table(soup,tables,work_table):
 
 work_table=[]
 for _page in range(1,get_pages(pages)+1):
-    soup_= get_work_page(_page)
+    soup_= get_work_page(url,_page)
     tables = soup_.find('div',class_="bg-grey pd100").find_all('ul')[-2].find_all('li')
     get_work_table(soup_,tables,work_table)
 
