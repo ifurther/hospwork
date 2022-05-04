@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import requests
 import pandas as pd
 from urllib.parse import urlparse
+from hospwork.tool import get_work_page
 
 # %%
 url_base='https://www.vghks.gov.tw'
@@ -49,18 +50,6 @@ else:
 
 # %% [markdown]
 # The `get_work_page` function is used for getting each work page
-
-# %%
-def get_work_page(page_url,page=None):
-    global url
-    if page != None:
-        page_url = page_url+'?page='+str(page)
-    if url == None:
-        page_url = url
-        print(page_url)
-    g=requests.get(page_url)
-    soup=BeautifulSoup(g.content, 'html.parser')
-    return soup
 
 # %% [markdown]
 # Using `get_work_page` to read each page and using `get_tables_part` read work table
