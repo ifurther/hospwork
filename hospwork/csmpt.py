@@ -50,6 +50,6 @@ class Csmpt(Hospital_work):
                     dead_line = get_work_deadtime(link_s)
                 except:
                     dead_line = "null(check webpage)"
-                print(p_i-1,title,link_s,dead_line)
+                #print(p_i-1,title,link_s,dead_line)
                 work_table.append([p_i-1, title, dead_line, link_s ])
         return work_table
