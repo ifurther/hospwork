@@ -25,17 +25,17 @@ class Vghks(Hospital_work):
 
         self.work_table=pd.DataFrame(work_table, columns=['no','召聘職稱','期限' ,'連結'])
 
-    def get_pages_link(self,pages_table):
+    def get_pages_link(self,pages_table,page_one=self.url_full):
         if pages_table == None:
             print("only one page")
             pages_link=None
         else:
             #print(pages_table.find_all('a'))
             pages_link=[]
-            pages_link.append(self.url_full)
+            pages_link.append(page_one)
             for i, item in enumerate(pages_table.find_all('a')):
                 s=item.get('href')
-                link_s = urlparse(self.url_full)._replace(path=s,query=[]).geturl()
+                link_s = urlparse(page_one)._replace(path=s,query=[]).geturl()
                 if link_s not in pages_link:
                     pages_link.append(link_s)
                 #print('#{} {}'.format(i , s))
@@ -63,6 +63,6 @@ class Vghks(Hospital_work):
                     all_td = item.find_all('td')
                     origination = all_td[1].find('p').text
                     dead_line = all_td[-1].find('p').text
-                    print(i,title,link_s,origination,dead_line)
+                    #print(i,title,link_s,origination,dead_line)
                     work_table.append([i-2, title, dead_line, link_s ])
         return work_table
