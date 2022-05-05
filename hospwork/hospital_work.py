@@ -1,5 +1,5 @@
 class Hospital_work:
-    def __init__(self, name, url_base, url_work, work_table):
+    def __init__(self):
         self.name = name
         self.work = work_table
         self.url_base = url_base
