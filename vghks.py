@@ -3,23 +3,15 @@ from bs4 import BeautifulSoup
 import requests
 import pandas as pd
 from urllib.parse import urlparse
-from hospwork.tool import get_work_page
+from hospwork.tool import get_base_web_data,get_work_page
+from hospwork.vghks import Vghks
 
 # %%
 url_base='https://www.vghks.gov.tw'
 url_work_table='/News.aspx?n=C03011BF96C680C4&sms=5EF61FB0D0F5B657'
-url=url_base+url_work_table
-g=requests.get(url)
-soup=BeautifulSoup(g.content, 'html.parser')
 
-# %%
-def get_tables_part(soup):
-    tables = soup.find_all('tbody')
-    if len(tables) == 1:
-        return None,tables
-    else:
-        return tables[0],tables[1]
-pages_table,work_tables = get_tables_part(soup)
+work_page_base = get_base_web_data(url)
+pages_table,work_tables = Vghks.get_tables_part(soup)
 
 # %%
 print("page list:",pages_table,"work list:",work_tables)
