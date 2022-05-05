@@ -9,9 +9,10 @@ from hospwork.vghks import Vghks
 # %%
 url_base='https://www.vghks.gov.tw'
 url_work_table='/News.aspx?n=C03011BF96C680C4&sms=5EF61FB0D0F5B657'
+url=url_base+url_work_table
 
 work_page_base = get_base_web_data(url)
-pages_table,work_tables = Vghks.get_tables_part(soup)
+pages_table,work_tables = Vghks.get_tables_part('',work_page_base)
 
 # %%
 print("page list:",pages_table,"work list:",work_tables)
@@ -73,9 +74,9 @@ if type(pages_link) != list:
 else:
     for p_i, p_item in enumerate(pages_link):
         soup_ = get_work_page(p_item)
-        table_ = get_tables_part(soup_)[0]
+        x, table_ = Vghks.get_tables_part('',soup_)
         
-        work_table = get_work_table(table_,work_table)
+        work_table = Vghks.get_work_table('',table_,work_table)
 
 
 # %%
