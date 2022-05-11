@@ -2,6 +2,8 @@
 */.ipynb_checkpoints/*
 .ipynb_checkpoints/*
 
+*/__pycache__/*
+
 docs/cache
 docs/.doit.db
 docs/__pycache__

@@ -12,7 +12,7 @@ class Hch(Hospital_work):
         self.url_full = super().url()
         self.work_page_base = get_base_web_data(self.url_full)
         self.pages_link = self._get_pages_link(self.work_page_base, self.url_full)
-        
+
         work_table = []
         for page in self.pages_link:
             soup = get_base_web_data(page)
@@ -42,6 +42,6 @@ class Hch(Hospital_work):
             link={}
             for i in all_td[5].find_all("a"):
                 link[i.text]=url_base+i.get('href')
-            print("召聘職稱",title,'院區',place,"截止日期",deadline,"職缺單位",originization,"links",link)
+            #print("召聘職稱",title,'院區',place,"截止日期",deadline,"職缺單位",originization,"links",link)
             work_table.append([title, deadline, originization, place, link ])
         return work_table

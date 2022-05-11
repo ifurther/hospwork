@@ -1,5 +1,6 @@
 import pandas as pd
 import re
+import requests
 import json
 from hospwork.hospital_work import Hospital_work
 from hospwork.tool import get_base_web_data,get_work_page
@@ -21,14 +22,14 @@ class Ntuh(Hospital_work):
         totalPages = ntu_work_data['totalPages']
         work_table=[]
         for _page in range(1,totalPages):
-            g=requests.get(url+'?page='+str(_page))
+            g=requests.get(self.url_full+'?page='+str(_page))
             ntu_work_data=json.loads(g.content)
-            work_table=self._get_ntuh_work_table_one_page(ntu_work_data,work_table)
+            work_table=self._get_ntuh_work_table_one_page(self.url_base,ntu_work_data,work_table)
 
         self.work_table=pd.DataFrame(work_table, columns=['召聘職稱','召聘單位','期限' ,'連結'])
         print('totalcount: {} getdatacount:{}'.format(totalcount,len(work_table)))
 
-    def _get_ntuh_work_table_one_page(self,ntu_work_data,work_table):
+    def _get_ntuh_work_table_one_page(self, url_base, ntu_work_data, work_table):
         for i, item in enumerate(ntu_work_data['queryList']):
             title = item['title']
             origantion = item['jobDepno']
@@ -39,6 +40,6 @@ class Ntuh(Hospital_work):
                 link = 'https://reg.ntuh.gov.tw/WebApplication/Administration/NtuhGeneralSelect/Entry.aspx?selectno='+item['recruitNo']
             else:
                 link = url_base+item['ctx'].lstrip('<p><a href="../').split('"><span ')[0]
-            print('#{}召聘職稱: {} 召聘單位: {}\n 期限: {}\n 連結：{}'.format(i+1, title, origantion, dead_line, link))
+            #print('#{}召聘職稱: {} 召聘單位: {}\n 期限: {}\n 連結：{}'.format(i+1, title, origantion, dead_line, link))
             work_table.append([title, origantion, dead_line, link])
         return work_table
