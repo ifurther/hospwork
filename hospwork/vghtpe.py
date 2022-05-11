@@ -20,7 +20,7 @@ class Vghtpe(Hospital_work):
                 title = first_td.string
                 origantion = first_td.find_next_siblings('td')[0].string
                 dead_line = first_td.find_next_siblings('td')[2].string
-                print('#{}召聘職稱: {} 召聘單位: {}\n 期限: {}\n 連結：{}{}'.format(i+1, title, origantion, dead_line, self.url_base, s.get('href')))
+                #print('#{}召聘職稱: {} 召聘單位: {}\n 期限: {}\n 連結：{}{}'.format(i+1, title, origantion, dead_line, self.url_base, s.get('href')))
                 work_table.append([title, origantion, dead_line, self.url_base+s.get('href')])
 
         self.work_table=pd.DataFrame(work_table, columns=['召聘職稱','召聘單位','期限' ,'連結'])
