@@ -12,7 +12,7 @@ url_work_table='/News.aspx?n=C03011BF96C680C4&sms=5EF61FB0D0F5B657'
 url=url_base+url_work_table
 
 work_page_base = get_base_web_data(url)
-pages_table,work_tables = Vghks.get_tables_part('',work_page_base)
+pages_table,work_tables = Vghks._get_tables_part('',work_page_base)
 
 # %%
 print("page list:",pages_table,"work list:",work_tables)
