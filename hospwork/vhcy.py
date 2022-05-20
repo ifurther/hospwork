@@ -14,21 +14,20 @@ class Vhcy(Hospital_work):
         self.url_full = super().url()
         self.work_page_base = get_base_web_data(self.url_full)
         self.work_page_work_table = self.work_page_base.find("tbody")
-        self.pages_link = self._get_pages_link(self.work_page_base,self.url_full)
+        self.pages_link = self._get_pages_link(self.work_page_base,self.url_base,self.url_full)
         
         work_table=[]
-        work_table = get_work_table(work_page,work_table)
-        for p_i, p_item in enumerate(pages_link):
+        for p_i, p_item in enumerate(self.pages_link):
             table_ = get_work_page(p_item)
 
-            work_table = get_work_table(table_,work_table)
+            work_table = self._get_work_table(self.url_base,table_,work_table)
 
         self.work_table=pd.DataFrame(work_table, columns=['召聘職稱','期限' ,"職缺單位" ,'連結'])
 
 
-    def _get_pages_link(self,soup,url_full)
+    def _get_pages_link(self,soup,url_base,url_full):
         pages_link=[]
-        pages_link.append(url)
+        pages_link.append(url_full)
         for o in soup.find("div",class_="pager").find_all("a"):
             if o.text == "下一頁" or o.text == "»":
                 pass
@@ -38,7 +37,7 @@ class Vhcy(Hospital_work):
                 #print(o.text,link)
         return pages_link
 
-    def get_work_detail(link):
+    def get_work_detail(self,link):
         work_detail = get_work_page(link).find("div",class_="newContent").text
         if work_detail.replace("\n","") == "":
             return None
@@ -47,7 +46,7 @@ class Vhcy(Hospital_work):
 
 
 
-    def get_work_title(title):
+    def get_work_title(self,title):
         try:
             new_title = re.search("\B[科,短,社,契,牙,秘,醫,部,室](.*)[員,理,工,師,生]",title).group(0)
         except AttributeError:
@@ -56,11 +55,11 @@ class Vhcy(Hospital_work):
 
 
 
-    def get_work_originazation(title,link):
+    def get_work_originazation(self,title,link):
         try:
             origination = re.search("((.*)[組,部,科,室,心])",title).group(1)
         except AttributeError:
-            g = get_work_detail(link)
+            g = self.get_work_detail(link)
             if g == None:
                 return "check page"
             try:
@@ -74,8 +73,8 @@ class Vhcy(Hospital_work):
 
 
 
-    def get_work_deadtime(link):
-        g = get_work_detail(link)
+    def get_work_deadtime(self,link):
+        g = self.get_work_detail(link)
         if g == None:
             return "check page"
         try:
@@ -98,21 +97,20 @@ class Vhcy(Hospital_work):
                 dead = "check page"
             return dead
 
-    def get_work_table(table_,work_table):
+    def _get_work_table(self,url_base,table_,work_table):
         for p_i, p_item in enumerate(table_.find_all("tr")):
             if p_item.find('a'):
                 p_item_a = p_item.find('a')
                 title = p_item_a.text
                 if "錄取公告" in title or '考試公告' in title or "甄試結果公告" in title or "核定" in title:
                     break
-                new_title = get_work_title(title)
+                new_title = self.get_work_title(title)
                 link_s = url_base+p_item_a.get('href')
-                origination = get_work_originazation(title,link_s)
-                try:
-                    dead_line = get_work_deadtime(link_s)
-                except:
-                    print("Error",p_item)
-                print(p_i-1,new_title,link_s,dead_line, origination)
+                if self.get_work_detail(link_s) == None:
+                    break
+                origination = self.get_work_originazation(title,link_s)
+                dead_line = self.get_work_deadtime(link_s)
+                #print(p_i-1,new_title,link_s,dead_line, origination)
                 work_table.append([new_title, dead_line, origination, link_s ])
         return work_table
 
