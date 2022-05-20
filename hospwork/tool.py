@@ -1,9 +1,9 @@
 from bs4 import BeautifulSoup
 import requests
 
-def get_base_web_data(url_base,url_work_table=None):
-    if url_work_table != None:
-        url = url_base + url_work_table
+def get_base_web_data(url_base,url_work_table_link=None):
+    if url_work_table_link != None:
+        url = url_base + url_work_table_link
     else:
         url = url_base
     g=requests.get(url)
