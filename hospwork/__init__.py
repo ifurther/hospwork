@@ -7,4 +7,4 @@ from .ntuh import Ntuh
 from .cych import Cych
 from .tool import get_base_web_data,get_work_page
 
-__all__ = ["__main__", "hospital_work", "tool", "cych", "hch","ntuh"]
+__all__ = ["__main__", "hospital_work", "tool", "cych", "hch","ntuh", "vhcy"]
