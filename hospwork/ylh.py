@@ -62,6 +62,8 @@ class Ylh(Hospital_work):
             elif "時薪人員" in title:
                 #print('skip: ',title)
                 pass
+            elif "初試名單" in title:
+                pass
             else:
                 originization = re.search(r"\B院((.*)[室,部,中心])", title).group(1)
                 try:
