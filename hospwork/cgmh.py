@@ -43,17 +43,15 @@ class Cgmh(Hospital_work):
         elif '自即日起' in work_detail_web:
             return '自即日起'
         elif '即日起至' in work_detail_web:
-            dead_line = re.findall("\d+年\d+月\d+日",work_detail_web.rsplit('即日起至')[1].split("止")[0].replace(' ',''))[0]
-            return dead_line
+            return re.findall("\d+年\d+月\d+日",work_detail_web.rsplit('即日起至')[1].split("止")[0].replace(' ',''))[0]
         elif '即日起收件至' in work_detail_web:
-            dead_line = work_detail_web.rsplit("即日起收件至")[1].split("止")[0].replace("：","")
-            return dead_line      
+            return  work_detail_web.rsplit("即日起收件至")[1].split("止")[0].replace("：","")
         else:
             try:
-                dead_line = work_detail_web.rsplit("報名期限")[1].split("截止")[0].replace("：","")
+                return work_detail_web.rsplit("報名期限")[1].split("截止")[0].replace("：","")
             except:
                 return re.findall("\d+年\d+月\d+日",work_detail_web)[0]
-    
+
     def get_work_table(self, url_full, soup, tables, work_table):
         for i, item in enumerate(tables):
             if item.find('a'): #過濾掉被刪除的文章
@@ -63,5 +61,5 @@ class Cgmh(Hospital_work):
                 title = item.find_all('div')[1].string
                 work_page_soup = get_work_page(work_detail_link)
                 dead_line = self.get_work_dead_line( work_page_soup )
-                print('#{}召聘職稱: {} 期限: {}\n 連結：{}'.format(i+1, title, dead_line, work_detail_link ))
+                #print('#{}召聘職稱: {} 期限: {}\n 連結：{}'.format(i+1, title, dead_line, work_detail_link ))
                 work_table.append([i-2, title, dead_line, work_detail_link ])
