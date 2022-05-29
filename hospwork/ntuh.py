@@ -27,7 +27,7 @@ class Ntuh(Hospital_work):
             work_table=self._get_ntuh_work_table_one_page(self.url_base,ntu_work_data,work_table)
 
         self.work_table=pd.DataFrame(work_table, columns=['召聘職稱','召聘單位','期限' ,'連結'])
-        print('totalcount: {} getdatacount:{}'.format(totalcount,len(work_table)))
+        #print('totalcount: {} getdatacount:{}'.format(totalcount,len(work_table)))
 
     def _get_ntuh_work_table_one_page(self, url_base, ntu_work_data, work_table):
         for i, item in enumerate(ntu_work_data['queryList']):

@@ -27,6 +27,6 @@ class Cych(Hospital_work):
                 title = all_td[2].text.replace('\r','').replace('\n','').replace(' ','')
                 originazation = all_td[1].text.replace('\r','').replace('\n','').replace(' ','')
                 link = all_td[1].find('a').get('href')
-                print('序號:{} 職稱:{} 招募單位:{}'.format(no, title, originazation))
+                #print('序號:{} 職稱:{} 招募單位:{}'.format(no, title, originazation))
                 work_table.append([title, originazation, link])
         return work_table
