@@ -1,0 +1,22 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+ipython = "*"
+ipykernel = "*"
+jupyter-contrib-nbextensions = "*"
+jupytemplate = "*"
+pytest = "*"
+
+[packages]
+bs4 = "*"
+pandas = "*"
+requests = "*"
+html5lib = "*"
+lxml = "*"
+altair = "*"
+
+[requires]
+python_version = "3.8"

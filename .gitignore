@@ -1,0 +1,10 @@
+.vscode/settings.json
+*/.ipynb_checkpoints/*
+.ipynb_checkpoints/*
+
+*/__pycache__/*
+
+docs/cache
+docs/.doit.db
+docs/__pycache__
+docs/output
