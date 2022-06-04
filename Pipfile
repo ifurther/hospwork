@@ -17,6 +17,7 @@ requests = "*"
 html5lib = "*"
 lxml = "*"
 altair = "*"
+sqlalchemy = "*"
 
 [requires]
 python_version = "3.8"
