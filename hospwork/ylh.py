@@ -56,6 +56,8 @@ class Ylh(Hospital_work):
             elif "志願服務工作" in title:
                 #print('skip: ',title)
                 pass
+            elif "公共服務" in title:
+                pass
             elif "甄審會" in title:
                 #print('skip: ',title)
                 pass
@@ -65,12 +67,16 @@ class Ylh(Hospital_work):
             elif "初試名單" in title:
                 pass
             else:
-                originization = re.search(r"\B院((.*)[室,部,中心])", title).group(1)
+                try:
+                    originization = re.search(r"\B院((.*)[室,部,中心])", title).group(1)
+                except:
+                    originization = "error"
+                    print(title)
                 try:
                     new_title = re.search("\B聘((.*)[員,師,廚])",title).group(1)
                 except:
                     new_title="error"
-                    print(link)
+                    print(title,link)
                 #print("召聘職稱",new_title,'院區',place,"截止日期",deadline,"職缺單位",originization,"links",link)
                 work_table.append([new_title, deadline, originization, place, link])
         return work_table
