@@ -9,6 +9,7 @@ ipykernel = "*"
 jupyter-contrib-nbextensions = "*"
 jupytemplate = "*"
 pytest = "*"
+build = "*"
 
 [packages]
 bs4 = "*"
