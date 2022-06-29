@@ -11,6 +11,8 @@ class Vghtpe(Hospital_work):
         self.url_full = super().url()
         self.work_page_base = get_base_web_data(self.url_full)
         self.work_tables = self.work_page_base.find_all('tr')
+        self.url_admit = 'indexa.htm?openExternalBrowser=1'
+        self.admit_tables
 
         work_table=[]
         for i, item in enumerate(self.work_tables):
