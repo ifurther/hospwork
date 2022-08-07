@@ -26,7 +26,7 @@ class Ntuh(Hospital_work):
             ntu_work_data=json.loads(g.content)
             work_table=self._get_ntuh_work_table_one_page(self.url_base,ntu_work_data,work_table)
 
-        self.work_table=pd.DataFrame(work_table, columns=['召聘職稱','召聘單位','期限' ,'連結'])
+        self.work_table=pd.DataFrame(work_table, columns=['召聘職稱','召聘單位','期限' ,'詳細連結','報名連結'])
         #print('totalcount: {} getdatacount:{}'.format(totalcount,len(work_table)))
 
     def _get_ntuh_work_table_one_page(self, url_base, ntu_work_data, work_table):
@@ -37,9 +37,12 @@ class Ntuh(Hospital_work):
             dead_line = item['edatestr']
 
             if item['recruitNo']:
-                link = 'https://reg.ntuh.gov.tw/WebApplication/Administration/NtuhGeneralSelect/Entry.aspx?selectno='+item['recruitNo']
+                #link = 'https://reg.ntuh.gov.tw/WebApplication/Administration/NtuhGeneralSelect/Entry.aspx?selectno='+item['recruitNo']
+                detail_link = 'https://reg.ntuh.gov.tw/NtuhGeneralSelect/Openpdf.aspx?SelectNo='+item['recruitNo']+'&FileName='+item['recruitNo']+'.pdf'
+                resume_link = 'https://reg.ntuh.gov.tw/NtuhGeneralSelect/Entry.aspx?selectno='+item['recruitNo']
             else:
-                link = url_base+item['ctx'].lstrip('<p><a href="../').split('"><span ')[0]
+                detail_link = url_base+item['ctx'].lstrip('<p><a href="../').split('"><span ')[0]
+                resume_link = ''
             #print('#{}召聘職稱: {} 召聘單位: {}\n 期限: {}\n 連結：{}'.format(i+1, title, origantion, dead_line, link))
-            work_table.append([title, origantion, dead_line, link])
+            work_table.append([title, origantion, dead_line, detail_link, resume_link])
         return work_table
