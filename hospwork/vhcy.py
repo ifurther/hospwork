@@ -22,7 +22,7 @@ class Vhcy(Hospital_work):
 
             work_table = self._get_work_table(self.url_base,table_,work_table)
 
-        self.work_table=pd.DataFrame(work_table, columns=['召聘職稱','期限' ,"職缺單位" ,'連結'])
+        self.work_table=pd.DataFrame(work_table, columns=['召聘職稱','期限' ,"職缺單位" ,'報名簡章'])
 
 
     def _get_pages_link(self,soup,url_base,url_full):
