@@ -18,7 +18,7 @@ class Cgmh(Hospital_work):
             soup_=get_work_page(self.url_full, page=_page, page_link_part='&page=')
             tables = soup_.find('div',class_="bg-grey pd100").find_all('ul')[-2].find_all('li')
             self.get_work_table(self.url_full, soup_, tables, work_table)
-        self.work_table=pd.DataFrame(work_table, columns=['no','召聘職稱','期限' ,'連結'])
+        self.work_table=pd.DataFrame(work_table, columns=['no','召聘職稱','期限' , '詳細連結', '報名連結'])
 
     
     def get_pages(self, pages):
@@ -66,5 +66,6 @@ class Cgmh(Hospital_work):
                 title = item.find_all('div')[1].string
                 work_page_soup = get_work_page(work_detail_link)
                 dead_line = self.get_work_dead_line( work_page_soup )
+                resume_link = 'https://webapp.cgmh.org.tw/resume/adm.ASP'
                 #print('#{}召聘職稱: {} 期限: {}\n 連結：{}'.format(i+1, title, dead_line, work_detail_link ))
-                work_table.append([i-2, title, dead_line, work_detail_link ])
+                work_table.append([i-2, title, dead_line, work_detail_link, resume_link ])
