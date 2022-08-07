@@ -8,6 +8,7 @@ import numpy as np
 
 #sys.path.append(Path().cwd().parent.as_posix())
 from . import Csmpt,Ylh,Ntuh,Cych,Vghks,Vghtpe
+from .io.sqlite import to_sqlite
 
 def main():
     csmpt, ylh, ntuh, cych, vghks, vghtpe = Csmpt(),Ylh(),Ntuh(),Cych(),Vghks(),Vghtpe()
@@ -26,16 +27,8 @@ def main():
 
 
     g=Full_work_table[Full_work_table['召聘職稱'].str.match(r'\S+(醫學物理師|放射師)')==True]
+    to_sqlite(g)
     print(Full_work_table)
     print(g)
-
-    database = r"sqlite:///hospwork.db"
-
-    # create a database connection
-    db = create_engine(database)
-    with db.connect() as conn:
-        #Full_work_table = Full_work_table.fillna(value=np.nan, inplace=True)
-        Full_work_table.to_sql('work_table', conn, if_exists='append', index=False)
-    
 
 
