@@ -17,7 +17,7 @@ class Cych(Hospital_work):
         for no in range(2,13,2):
             work_table = self._get_each_table(no, self.all_table,work_table)
 
-        self.work_table = pd.DataFrame(work_table, columns=['召聘職稱','召聘單位' ,'連結'])
+        self.work_table = pd.DataFrame(work_table, columns=['召聘職稱', '召聘單位', '報名連結'])
 
     def _get_each_table(self, no, all_table, work_table):
         for tt in all_table[no].find('table').find_all('tr'):
