@@ -2,6 +2,7 @@ import pandas as pd
 import re
 from hospwork.hospital_work import Hospital_work
 from hospwork.tool import get_base_web_data,get_work_page
+from hospwork.error import errormsg
 from urllib.parse import urlparse
 
 class Cgmh(Hospital_work):
@@ -55,6 +56,7 @@ class Cgmh(Hospital_work):
                 try:
                     return re.findall("\d+年\d+月\d+日",work_detail_web)[0]
                 except:
+                    errormsg(self.name, title)
                     return 'please check webpage'
 
     def get_work_table(self, url_full, soup, tables, work_table):
