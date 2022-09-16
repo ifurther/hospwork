@@ -29,7 +29,7 @@ class Vghks(Hospital_work):
         if page_one == None:
             page_one = self.url_full
         if pages_table == None:
-            print("only one page")
+            #print("only one page")
             pages_link=None
         else:
             #print(pages_table.find_all('a'))
@@ -57,7 +57,7 @@ class Vghks(Hospital_work):
                 s=item.find('a')
                 if s == -1:
                     s = item
-                    print(i, s)
+                    #print(i, s)
                 else:
                     title = s.get('title')
                     link = s.get('href')
