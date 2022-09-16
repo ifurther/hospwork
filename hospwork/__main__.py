@@ -1,18 +1,18 @@
 #!/usr/bin/env python
 
-from sqlalchemy import create_engine
 import pandas as pd
 import numpy as np
 
 #sys.path.append(Path().cwd().parent.as_posix())
-from . import Csmpt,Ylh,Ntuh,Cych,Vghks,Vghtpe
+from . import Csmpt,Ylh,Ntuh,Cych,Vghks,Vghtpe,Hch,Ntucc
+from .io.sqlite import to_sqlite
 
 def main():
-    csmpt, ylh, ntuh, cych, vghks, vghtpe = Csmpt(),Ylh(),Ntuh(),Cych(),Vghks(),Vghtpe()
+    csmpt, ylh, ntuh, cych, vghks, vghtpe, hch, ntucc = Csmpt(),Ylh(),Ntuh(),Cych(),Vghks(),Vghtpe(), Hch(), Ntucc()
 
 
     Full_work_table=[]
-    for cc in [csmpt, ylh, ntuh, cych, vghks, vghtpe]:
+    for cc in [csmpt, ylh, ntuh, cych, vghks, vghtpe, hch, ntucc]:
         cc.get_full_work_table()
         Full_work_table.append(cc.get_full_work_table())
 
@@ -27,13 +27,8 @@ def main():
     print(Full_work_table)
     print(g)
 
-    database = r"sqlite:///hospwork.db"
-
-    # create a database connection
-    db = create_engine(database)
-    with db.connect() as conn:
-        #Full_work_table = Full_work_table.fillna(value=np.nan, inplace=True)
-        Full_work_table.to_sql('work_table', conn, if_exists='append', index=False)
+    to_sqlite(Full_work_table)
+    #g.to_csv('test.csv')
 
 if __name__ == '__main__':
     main()
