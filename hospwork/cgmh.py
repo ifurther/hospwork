@@ -8,6 +8,7 @@ from urllib.parse import urlparse
 class Cgmh(Hospital_work):
     def __init__(self):
         self.name = '長庚醫院'
+        self.local_zone = 'Taiwan'
         self.url_base = 'https://www.cgmh.org.tw/tw/Systems/'
         self.url_work = 'RecruitInfo/3?bulletinType=A&category=Z'
         self.url_full = super().url()
@@ -25,7 +26,7 @@ class Cgmh(Hospital_work):
     def get_pages(self, pages):
         return int(pages.find_all("li")[-2].text)
 
-    def get_work_dead_line(self, soup):  
+    def get_work_dead_line(self, soup, title):  
         work_detail_web = soup.find('article').get_text().replace("\xa0","").replace('\n',"").replace("\u3000","")
         if '報名期限展延至' in work_detail_web:
             return re.findall("\d+年\d+月\d+日",work_detail_web.rsplit('報名期限展延至')[1].split("止")[0].replace(' ',''))[0]
@@ -67,7 +68,7 @@ class Cgmh(Hospital_work):
                 work_detail_link = url_base_website._replace(path=urlparse(s.get('href')).path).geturl()
                 title = item.find_all('div')[1].string
                 work_page_soup = get_work_page(work_detail_link)
-                dead_line = self.get_work_dead_line( work_page_soup )
+                dead_line = self.get_work_dead_line( work_page_soup ,title)
                 resume_link = 'https://webapp.cgmh.org.tw/resume/adm.ASP'
                 #print('#{}召聘職稱: {} 期限: {}\n 連結：{}'.format(i+1, title, dead_line, work_detail_link ))
                 work_table.append([i-2, title, dead_line, work_detail_link, resume_link ])

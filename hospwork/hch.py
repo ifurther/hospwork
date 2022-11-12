@@ -7,6 +7,7 @@ from hospwork.error import errormsg
 class Hch(Hospital_work):
     def __init__(self):
         self.name = '國立臺灣大學醫學院附設醫院新竹臺大分院'
+        self.local_zone = 'Taiwan'
         self.url_base = 'https://www.hch.gov.tw'
         self.url_work = '/?aid=506&pid=0&page_name=list&pageNo=1'
         self.url_full = super().url()

@@ -9,6 +9,7 @@ from hospwork.tool import get_base_web_data,get_work_page
 class Ntucc(Hospital_work):
     def __init__(self):
         self.name = '國立臺灣大學醫學院附設癌醫中心醫院'
+        self.local_zone = 'Taiwan'
         self.url_base='https://www.ntucc.gov.tw/ntucc/'
         self.url_work ='Recruit.action'
         self.url_ajax = 'RecruitAjax.action'
