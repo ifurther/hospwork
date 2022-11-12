@@ -8,6 +8,7 @@ ipython = "*"
 ipykernel = "*"
 jupyter-contrib-nbextensions = "*"
 jupytemplate = "*"
+jupyter_http_over_ws = "*"
 pytest = "*"
 build = "*"
 
