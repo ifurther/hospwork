@@ -7,6 +7,7 @@ from hospwork.tool import get_base_web_data,get_work_page
 class Ylh(Hospital_work):
     def __init__(self):
         self.name = '國立臺灣大學醫學院附設醫院雲林分院'
+        self.local_zone = 'Taiwan'
         self.url_base = 'https://www.ylh.gov.tw'
         self.url_work = '/?aid=104'
         self.url_full = super().url()
@@ -66,6 +67,8 @@ class Ylh(Hospital_work):
                 pass
             elif "初試名單" in title:
                 pass
+            elif "初試結果" in title:
+                pass
             else:
                 try:
                     originization = re.search(r"\B院((.*)[室,部,中心])", title).group(1)
@@ -73,10 +76,10 @@ class Ylh(Hospital_work):
                     originization = "error"
                     print(title)
                 try:
-                    new_title = re.search("\B聘((.*)[員,師,廚])",title).group(1)
+                    new_title = re.search("\B[聘,選]((.*)[員,師,廚,長])",title).group(1)
                 except:
                     new_title="error"
-                    print(title,link)
+                    print(self.name,title,link)
                 #print("召聘職稱",new_title,'院區',place,"截止日期",deadline,"職缺單位",originization,"links",link)
                 work_table.append([new_title, deadline, originization, place, link])
         return work_table
