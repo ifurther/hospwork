@@ -42,11 +42,17 @@ class Ntucc(Hospital_work):
             dead_line = item['edate_sh']
             file_list = {}
             for _file in item['recruitFile']:
-                if _file['title'] == "甄選簡則(PDF檔)":
-                    file_list['detail_file_link'] = self._get_file_link(_file['id'])
-                else:
-                    file_list['detail_file_link'] = 'end'
-                if "信封封面" in _file['title']:
+                if _file['typeNo'] == '1':
+                    if _file['title'] == "甄選簡則(PDF檔)":
+                        file_list['detail_file_link'] = self._get_file_link(_file['id'])
+                    elif '甄選簡則' in _file['title']:
+                        file_list['detail_file_link'] = self._get_file_link(_file['id'])
+                    elif '錄取名單' in _file['title']:
+                        file_list['detail_file_link'] = 'end'
+                        file_list['first_admit_file_link'] = self._get_file_link(_file['id'])
+                    else:
+                        file_list['detail_file_link'] = 'so many files'
+                if "x信封封面" in _file['title']:
                     file_list['letter_file_link'] = self._get_file_link(_file['id'])
                 else:
                     file_list['letter_file_link'] = ''
@@ -74,7 +80,9 @@ class Ntucc(Hospital_work):
             if 'application_file_doc_link' not in file_list and 'application_file_odt_link' not in file_list:
                 work_table.append([title, origantion, dead_line, 'online', file_list['detail_file_link'], '', '', '',''])
             else:
-                work_table.append([title, origantion, dead_line, 'mail', file_list['detail_file_link'], file_list['application_file_doc_link'], file_list['application_file_odt_link'], file_list['application_file_pdf_link'], file_list['letter_file_link']])
-
+                try:
+                    work_table.append([title, origantion, dead_line, 'mail', file_list['detail_file_link'], file_list['application_file_doc_link'], file_list['application_file_odt_link'], file_list['application_file_pdf_link'], file_list['letter_file_link']])
+                except KeyError as ke:
+                    print(self.name,title,'error input in table',ke)
 
         return work_table
