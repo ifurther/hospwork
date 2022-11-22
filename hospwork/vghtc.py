@@ -61,11 +61,13 @@ class Vghtc(Hospital_work):
                     #print('期限' , ttt.text)
                     _one_job_data['deadline'] = ttt.text
                 elif ttt.get('data-th') == '徵才項目':
-                    _one_job_data['jobtype'] = ttt.text
+                    job_type_clean = ttt.text.replace('【徵才公告】','').replace(self.name,'')
+                    _one_job_data['jobtype'] = job_type_clean
                     try:
-                        _one_job_data['job_type'] = re.search(r"[胸,皮,泌,眼,內,外,藥,麻,臨,急]\w+[科,部]",ttt.text.replace('【徵才公告】','')).group(0)
+                        _one_job_data['job_type'] = re.search(r"[資,護,家,胸,皮,泌,眼,內,外,藥,麻,臨,急,病,兒]\w+[科,部,室,心]",job_type_clean).group(0)
+                        _one_job_data['jobtype'] = job_type_clean.replace( _one_job_data['job_type'],'').replace('：','')
                     except:
-                        print(ttt.text,'get job_type error')
+                        print(self.name,ttt.text,'get job_type error')
                         _one_job_data['job_type'] = None
                     job_detail_link = url_base+ttt.find('a').get('href')
                     #print('詳細連結', job_detail_link)
