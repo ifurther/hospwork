@@ -4,15 +4,15 @@ import pandas as pd
 import numpy as np
 
 #sys.path.append(Path().cwd().parent.as_posix())
-from . import Csmpt,Ylh,Ntuh,Cych,Vghks,Vghtpe,Hch,Ntucc
+from . import Csmpt,Ylh,Ntuh,Cych,Vghks,Vghtpe,Hch,Ntucc,Vghtc
 from .io.sqlite import to_sqlite
 
 def main():
-    csmpt, ylh, ntuh, cych, vghks, vghtpe, hch, ntucc = Csmpt(),Ylh(),Ntuh(),Cych(),Vghks(),Vghtpe(), Hch(), Ntucc()
+    csmpt, ylh, ntuh, cych, vghks, vghtpe, hch, ntucc, vghtc = Csmpt(),Ylh(),Ntuh(),Cych(),Vghks(),Vghtpe(), Hch(), Ntucc(), Vghtc()
 
 
     Full_work_table=[]
-    for cc in [csmpt, ylh, ntuh, cych, vghks, vghtpe, hch, ntucc]:
+    for cc in [csmpt, ylh, ntuh, cych, vghks, vghtpe, hch, ntucc, vghtc]:
         cc.get_full_work_table()
         Full_work_table.append(cc.get_full_work_table())
 
