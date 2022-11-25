@@ -71,15 +71,15 @@ class Ylh(Hospital_work):
                 pass
             else:
                 try:
-                    originization = re.search(r"\B院((.*)[室,部,中心])", title).group(1)
+                    jobtype = re.search(r"\B院((.*)[室,部,中心])", title).group(1)
                 except:
-                    originization = "error"
-                    print(title)
+                    jobtype = "error"
+                    print(self.name,'error: find jobtype',title)
                 try:
                     new_title = re.search("\B[聘,選]((.*)[員,師,廚,長])",title).group(1)
                 except:
                     new_title="error"
-                    print(self.name,title,link)
+                    print(self.name,'error: new_title',title,link)
                 #print("召聘職稱",new_title,'院區',place,"截止日期",deadline,"職缺單位",originization,"links",link)
-                work_table.append([new_title, deadline, originization, place, link])
+                work_table.append([new_title, deadline, jobtype, place, link])
         return work_table

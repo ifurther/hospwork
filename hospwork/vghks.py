@@ -23,7 +23,7 @@ class Vghks(Hospital_work):
                 x, table_ = self._get_tables_part(soup_)
                 work_table = self._get_work_table(table_,work_table)
 
-        self.work_table=pd.DataFrame(work_table, columns=['召聘職稱','期限' ,'連結'])
+        self.work_table=pd.DataFrame(work_table, columns=['召聘職稱','期限' ,"召聘單位" ,'連結'])
 
     def _get_pages_link(self,pages_table,page_one=None):
         if page_one == None:
@@ -65,6 +65,7 @@ class Vghks(Hospital_work):
                     all_td = item.find_all('td')
                     origination = all_td[1].find('p').text
                     dead_line = all_td[-1].find('p').text
+                    title=title.replace(origination,'')
                     #print(i,title,link_s,origination,dead_line)
-                    work_table.append([title, dead_line, link_s ])
+                    work_table.append([title, dead_line, origination, link_s ])
         return work_table
