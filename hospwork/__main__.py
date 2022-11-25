@@ -8,7 +8,7 @@ from . import Csmpt,Ylh,Ntuh,Cych,Vghks,Vghtpe,Hch,Ntucc,Vghtc
 from .io.sqlite import to_sqlite
 
 def main():
-    csmpt, ylh, ntuh, cych, vghks, vghtpe, hch, ntucc, vghtc = Csmpt(),Ylh(),Ntuh(),Cych(),Vghks(),Vghtpe(), Hch(), Ntucc(), Vghtc()
+    csmpt, ylh, ntuh, cych, vghks, vghtpe, hch, ntucc, vghtc= Csmpt(),Ylh(),Ntuh(),Cych(),Vghks(),Vghtpe(), Hch(), Ntucc(), Vghtc()
 
 
     Full_work_table=[]

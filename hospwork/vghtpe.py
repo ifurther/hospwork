@@ -1,6 +1,6 @@
 import pandas as pd
 from hospwork.hospital_work import Hospital_work
-from hospwork.tool import get_base_web_data,get_work_page
+from hospwork.tool.web import get_base_web_data,get_work_page
 
 
 class Vghtpe(Hospital_work):
