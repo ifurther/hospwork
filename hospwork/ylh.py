@@ -1,7 +1,7 @@
 import pandas as pd
 import re
 from hospwork.hospital_work import Hospital_work
-from hospwork.tool import get_base_web_data,get_work_page
+from hospwork.tool.web import get_base_web_data,get_work_page
 
 
 class Ylh(Hospital_work):
@@ -19,7 +19,7 @@ class Ylh(Hospital_work):
             soup = get_base_web_data(page)
             self._get_each_page_wrok_table(self.url_base,soup,work_table)
 
-        self.work_table = pd.DataFrame(work_table, columns=['召聘職稱','期限' ,"職缺單位" , '院區','連結'])
+        self.work_table = pd.DataFrame(work_table, columns=['召聘職稱','期限' ,"召聘單位" , '院區','連結'])
 
     def _get_pages_link(self,url_full,url_base,soup):
         pages_link=[]
