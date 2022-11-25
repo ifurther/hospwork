@@ -2,7 +2,7 @@ import pandas as pd
 import re
 from hospwork.hospital_work import Hospital_work
 from hospwork.tool.web import get_base_web_data,get_work_page
-
+from hospwork.tool.job import findjobtype
 
 class Vghtc(Hospital_work):
     def __init__(self):
@@ -64,7 +64,7 @@ class Vghtc(Hospital_work):
                     job_type_clean = ttt.text.replace('【徵才公告】','').replace(self.name,'').replace('【徵才】','')
                     _one_job_data['jobtype'] = job_type_clean
                     try:
-                        _one_job_data['job_type'] = re.search(r"[復,營,資,護,家,胸,皮,泌,眼,內,外,藥,麻,臨,急,病,兒]\w+[科,部,室,心]",job_type_clean).group(0)
+                        _one_job_data['job_type'] = findjobtype(job_type_clean)
                         _one_job_data['jobtype'] = job_type_clean.replace( _one_job_data['job_type'],'').replace('：','')
                     except:
                         print(self.name,ttt.text,'get job_type error')
