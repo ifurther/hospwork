@@ -33,7 +33,8 @@ class Ntucc(Hospital_work):
         self.work_table=pd.DataFrame(work_table, columns=['召聘職稱','召聘單位','期限' ,'報名方式', '報名簡章', '報名表(doc)', '報名表(odt)', '報名表(pdf)', '信封封面'])
         #print('totalcount: {} getdatacount:{}'.format(totalcount,len(work_table)))
     def _get_file_link(self,id):
-        return self.url_base+self.url_ajax+'!download.action?id='+id
+        return self.url_base+self.url_ajax.replace('.action','')+'!download.action?id='+id
+
     def _get_ntuh_work_table_one_page(self, ntucc_work_data, work_table):
         for i, item in enumerate(ntucc_work_data['queryList']):
             title = item['title']
@@ -52,7 +53,7 @@ class Ntucc(Hospital_work):
                         file_list['first_admit_file_link'] = self._get_file_link(_file['id'])
                     else:
                         file_list['detail_file_link'] = 'so many files'
-                if "x信封封面" in _file['title']:
+                if "信封封面" in _file['title']:
                     file_list['letter_file_link'] = self._get_file_link(_file['id'])
                 else:
                     file_list['letter_file_link'] = ''
@@ -66,7 +67,7 @@ class Ntucc(Hospital_work):
                         file_list['application_file_doc_link'] = self._get_file_link(_file['id'])
                 if _file['typeNo'] == "4":
                     file_list['first_admit_file_link'] = self._get_file_link(_file['id'])
-                if _file['typeNo'] == "5":
+                if _file['typeNo'] == "5" or _file['typeNo'] == "6":
                     file_list['second_admit_file_link'] = self._get_file_link(_file['id'])
             #print('#{}召聘職稱: {} 召聘單位: {}\n 期限: {}\n 連結：{}'.format(i+1, title, origantion, dead_line, file_list))
 
@@ -78,7 +79,10 @@ class Ntucc(Hospital_work):
             #if file_list['detail_file_link'] == 'end':
             #    break
             if 'application_file_doc_link' not in file_list and 'application_file_odt_link' not in file_list:
-                work_table.append([title, origantion, dead_line, 'online', file_list['detail_file_link'], '', '', '',''])
+                try:
+                    work_table.append([title, origantion, dead_line, 'online', file_list['detail_file_link'], '', '', '',''])
+                except KeyError as ke:
+                    print(self.name,title,'error input in table',ke)
             else:
                 try:
                     work_table.append([title, origantion, dead_line, 'mail', file_list['detail_file_link'], file_list['application_file_doc_link'], file_list['application_file_odt_link'], file_list['application_file_pdf_link'], file_list['letter_file_link']])

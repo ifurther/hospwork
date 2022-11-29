@@ -2,6 +2,7 @@
 
 import pandas as pd
 import numpy as np
+from tabulate import tabulate
 
 #sys.path.append(Path().cwd().parent.as_posix())
 from . import Csmpt,Ylh,Ntuh,Cych,Vghks,Vghtpe,Hch,Ntucc,Vghtc
@@ -25,8 +26,8 @@ def main():
 
     g=Full_work_table[Full_work_table['召聘職稱'].str.match(r'\S+(醫學物理師|放射師)')==True]
     print(Full_work_table)
-    print(g)
-
+    #print(g)
+    print(tabulate(g, headers='keys', tablefmt="pretty")) 
     to_sqlite(Full_work_table)
     #g.to_csv('test.csv')
 

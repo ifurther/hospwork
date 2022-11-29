@@ -25,7 +25,7 @@ class Vghtc(Hospital_work):
             work_table = self.get_work_table(self.url_base,_table,work_table)
 
         work_table=pd.DataFrame(work_table)
-        work_table.columns=['召聘職稱','召聘單位','連結','期限' ]
+        work_table.columns=['召聘職稱','召聘單位','詳細連結','期限' ]
         self.work_table=work_table
 
         # admit_table=[]
