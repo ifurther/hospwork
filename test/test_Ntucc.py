@@ -10,4 +10,5 @@ def test_ntucc():
     ntucc = Ntucc()
     assert ntucc.url_base == 'https://www.ntucc.gov.tw/ntucc/'
     assert isinstance(ntucc.work_table,pd.DataFrame)
+    assert len(ntucc.work_table) > 0
     #assert isinstance(ntucc.admit_table,pd.DataFrame)
