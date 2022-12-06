@@ -61,8 +61,7 @@ class Vghtc(Hospital_work):
                     #print('期限' , ttt.text)
                     _one_job_data['deadline'] = ttt.text
                 elif ttt.get('data-th') == '徵才項目':
-                    job_type_clean = ttt.text.replace('【徵才公告】','').replace(self.name,'').replace('【徵才】','')
-                    _one_job_data['jobtype'] = job_type_clean
+                    _one_job_data['jobtype'] = ttt.text
                     try:
                         _one_job_data['job_type'] = findjobtype(job_type_clean)
                         _one_job_data['jobtype'] = job_type_clean.replace( _one_job_data['job_type'],'').replace('：','')
