@@ -34,6 +34,10 @@ class Cgmh(Hospital_work):
             return '額滿為止'
         elif '招募合適人選為止' in work_detail_web:
             return '招募合適人選為止'
+        elif '隨到隨審' in work_detail_web:
+            return '隨到隨審'
+        elif '即日起至招聘完成' in work_detail_web:
+            return '即日起至招聘完成'
         elif '自即日起' in work_detail_web:
             return '自即日起'
         elif '即日起至' in work_detail_web:
