@@ -63,8 +63,13 @@ class Vghtc(Hospital_work):
                 elif ttt.get('data-th') == '徵才項目':
                     _one_job_data['jobtype'] = ttt.text
                     try:
-                        _one_job_data['job_type'] = findjobtype(job_type_clean)
-                        _one_job_data['jobtype'] = job_type_clean.replace( _one_job_data['job_type'],'').replace('：','')
+                        job_type_clean = ttt.text.replace('【徵才公告】','').replace(self.name,'').replace('【徵才】','')
+                        if '契約廚務佐理員' in ttt.text:
+                            _one_job_data['job_type'] = '營養室'
+                            _one_job_data['jobtype'] = '契約廚務佐理員'
+                        else:
+                            _one_job_data['job_type'] = findjobtype(job_type_clean)
+                            _one_job_data['jobtype'] = job_type_clean.replace( _one_job_data['job_type'],'').replace('：','')
                     except:
                         print(self.name,ttt.text,'get job_type error')
                         _one_job_data['job_type'] = None
