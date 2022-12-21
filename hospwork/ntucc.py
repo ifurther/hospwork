@@ -32,6 +32,7 @@ class Ntucc(Hospital_work):
 
         self.work_table=pd.DataFrame(work_table, columns=['召聘職稱','召聘單位','期限' ,'報名方式', '報名簡章', '報名表(doc)', '報名表(odt)', '報名表(pdf)', '信封封面'])
         #print('totalcount: {} getdatacount:{}'.format(totalcount,len(work_table)))
+        self.admit_table = pd.DataFrame(self.admit_table, columns=["召聘職稱", "召聘單位", "連結"])
     def _get_file_link(self,id):
         return self.url_base+self.url_ajax.replace('.action','')+'!download.action?id='+id
 
@@ -61,10 +62,12 @@ class Ntucc(Hospital_work):
                 if _file['typeNo'] == "2":
                     if _file['fileExt'] == '.pdf':
                         file_list['application_file_pdf_link'] = self._get_file_link(_file['id'])
-                    elif _file['fileExt'] == '.odt':
+                    if _file['fileExt'] == '.odt':
                         file_list['application_file_odt_link'] = self._get_file_link(_file['id'])
-                    elif "doc" in _file['fileExt']:
+                    if "doc" in _file['fileExt']:
                         file_list['application_file_doc_link'] = self._get_file_link(_file['id'])
+                    else
+                        file_list['application_file_doc_link'] = ""
                 if _file['typeNo'] == "4":
                     file_list['first_admit_file_link'] = self._get_file_link(_file['id'])
                 if _file['typeNo'] == "5" or _file['typeNo'] == "6":
