@@ -12,7 +12,7 @@ class Csmpt(Hospital_work):
         self.url_full = super().url()
         self.work_page_base = get_base_web_data(self.url_full)
         self.pages_link = self._get_pages_link(self.work_page_base, self.url_full)
-
+        self.admit_table = []
         work_table=[]
         work_table = self._get_work_table(self.work_page_base.find_all('article')[0],self.url_base,work_table)
         for p_i, p_item in enumerate(self.pages_link):
