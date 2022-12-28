@@ -11,6 +11,7 @@ jupytemplate = "*"
 jupyter_http_over_ws = "*"
 pytest = ">=7.2.0"
 build = "*"
+pylint = "*"
 
 [packages]
 bs4 = "*"
