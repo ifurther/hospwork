@@ -15,15 +15,14 @@ class Ntucc(Hospital_work):
         self.url_ajax = 'RecruitAjax.action'
         self.url_full = super().url()
         self.admit_table = []
-        #self.work_page_base = get_base_web_data(self.url_full)
         headers = { 'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36'}
         g=requests.get(self.url_full, headers=headers)
         my_params = {'jobtype': '-1', 'q_seekValue': '','pagenum':'1'}
         ntucc_work_data = json.loads(requests.get(self.url_base+self.url_ajax,params=my_params, cookies = g.cookies).content)
-        #soup=BeautifulSoup(g.content, 'html.parser')
-        #tables = soup.findAll('table')[0].findAll('tr')
+
         totalcount = ntucc_work_data['totalPages']
         totalPages = ntucc_work_data['totalPages']
+
         work_table=[]
         for _page in range(1,totalPages):
             my_params = {'jobtype': '-1', 'q_seekValue': '','pagenum':'{}'.format(str(_page))}
@@ -33,6 +32,7 @@ class Ntucc(Hospital_work):
         self.work_table=pd.DataFrame(work_table, columns=['召聘職稱','召聘單位','期限' ,'報名方式', '報名簡章', '報名表(doc)', '報名表(odt)', '報名表(pdf)', '信封封面'])
         #print('totalcount: {} getdatacount:{}'.format(totalcount,len(work_table)))
         self.admit_table = pd.DataFrame(self.admit_table, columns=["召聘職稱", "召聘單位", "連結"])
+
     def _get_file_link(self,id):
         return self.url_base+self.url_ajax.replace('.action','')+'!download.action?id='+id
 
@@ -66,21 +66,18 @@ class Ntucc(Hospital_work):
                         file_list['application_file_odt_link'] = self._get_file_link(_file['id'])
                     if "doc" in _file['fileExt']:
                         file_list['application_file_doc_link'] = self._get_file_link(_file['id'])
-                    else
+                    else:
                         file_list['application_file_doc_link'] = ""
                 if _file['typeNo'] == "4":
                     file_list['first_admit_file_link'] = self._get_file_link(_file['id'])
                 if _file['typeNo'] == "5" or _file['typeNo'] == "6":
                     file_list['second_admit_file_link'] = self._get_file_link(_file['id'])
-            #print('#{}召聘職稱: {} 召聘單位: {}\n 期限: {}\n 連結：{}'.format(i+1, title, origantion, dead_line, file_list))
 
             if 'first_admit_file_link' in file_list:
                 self.admit_table.append([title, origantion, file_list['first_admit_file_link']])
             if 'second_admit_file_link' in file_list:
                 self.admit_table.append([title, origantion, file_list['second_admit_file_link']])
 
-            #if file_list['detail_file_link'] == 'end':
-            #    break
             if 'application_file_doc_link' not in file_list and 'application_file_odt_link' not in file_list:
                 try:
                     work_table.append([title, origantion, dead_line, 'online', file_list['detail_file_link'], '', '', '',''])
