@@ -19,7 +19,7 @@ class Hch(Hospital_work):
             soup = get_base_web_data(page)
             work_table = self._get_each_page_wrok_table(self.url_base,soup,work_table)
         self.work_table = pd.DataFrame(work_table, columns=['召聘職稱','期限' ,"召聘單位" , '院區', '報名方式', '報名簡章', '報名表', '作業基金現職人員申請院內外補同意書', '信封封面'])
-
+        self.admit_table = [] # no admit table
     def _get_pages_link(self,soup,url_full):
         pages_link=[]
         for link in soup.find('ul',class_="pagination pagination-sm justify-content-center"):
