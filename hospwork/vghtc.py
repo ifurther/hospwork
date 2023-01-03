@@ -2,7 +2,7 @@ import pandas as pd
 import re
 from hospwork.hospital_work import Hospital_work
 from hospwork.tool.web import get_base_web_data,get_work_page
-from hospwork.tool.job import findjobtype,clean_unused_str
+from hospwork.tool.job import findjoboriginzation,findjobtype,clean_unused_str
 
 class Vghtc(Hospital_work):
     def __init__(self):
@@ -73,11 +73,11 @@ class Vghtc(Hospital_work):
                     _one_job_data['召聘職稱'] = job_type_clean
                     try:
                         if '契約廚務佐理員' in ttt.text:
-                            _one_job_data['召聘單位'] = '營養室'
-                            _one_job_data['召聘職稱'] = '契約廚務佐理員'
-                        else:
-                            _one_job_data['召聘單位'] = findjobtype(job_type_clean)
+                            _one_job_data['召聘單位'] = findjoboriginzation(job_type_clean)
                             _one_job_data['召聘職稱'] = job_type_clean.replace( _one_job_data['召聘單位'],'')
+                        else:
+                            _one_job_data['召聘職稱'] = findjobtype(job_type_clean)
+                            _one_job_data['召聘單位'] = None
                     except:
                         print(self.name,ttt.text,'get job origization error')
                         _one_job_data['召聘職稱'] = None
