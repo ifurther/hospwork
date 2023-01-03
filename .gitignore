@@ -3,7 +3,9 @@
 .ipynb_checkpoints/*
 
 */__pycache__/*
+*/*/__pycache__/*
 **.pyc
+
 docs/cache
 docs/.doit.db
 docs/__pycache__
