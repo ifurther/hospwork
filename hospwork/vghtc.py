@@ -22,11 +22,11 @@ class Vghtc(Hospital_work):
             _soup = get_work_page(_page_link)
             _table = _soup.find('table').find_all('tr')
             #print('#{}召聘職稱: {} 召聘單位: {}\n 期限: {}\n 連結：{}{}'.format(i+1, title, origantion, dead_line, self.url_base, s.get('href')))
-            self.get_work_table(self.url_base,_table,work_table)
+            work_table = self.get_work_table(self.url_base,_table,work_table)
 
         work_table=pd.DataFrame(work_table)
         if work_table.empty:
-            assert(work_table.empty,'Error',self.name,'get work table')
+            #assert(work_table.empty,'Error',self.name,'get work table')
             self.work_table = pd.DataFrame([],columns=['召聘職稱','召聘單位','詳細連結','期限'])
         else:
             self.work_table=work_table
@@ -72,10 +72,10 @@ class Vghtc(Hospital_work):
                     job_type_clean = clean_unused_str(ttt.text,self.name)
                     _one_job_data['召聘職稱'] = job_type_clean
                     try:
-                        if '契約廚務佐理員' in ttt.text:
+                        try:
                             _one_job_data['召聘單位'] = findjoboriginzation(job_type_clean)
                             _one_job_data['召聘職稱'] = job_type_clean.replace( _one_job_data['召聘單位'],'')
-                        else:
+                        except:
                             _one_job_data['召聘職稱'] = findjobtype(job_type_clean)
                             _one_job_data['召聘單位'] = None
                     except:
