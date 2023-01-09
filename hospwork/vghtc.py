@@ -22,7 +22,7 @@ class Vghtc(Hospital_work):
             _soup = get_work_page(_page_link)
             _table = _soup.find('table').find_all('tr')
             #print('#{}召聘職稱: {} 召聘單位: {}\n 期限: {}\n 連結：{}{}'.format(i+1, title, origantion, dead_line, self.url_base, s.get('href')))
-            work_table = self.get_work_table(self.url_base,_table,work_table)
+            self.get_work_table(self.url_base,_table,work_table)
 
         work_table=pd.DataFrame(work_table)
         if work_table.empty:
@@ -88,4 +88,4 @@ class Vghtc(Hospital_work):
             if _one_job_data:
                 work_table.append(_one_job_data)
 
-        return work_table
+
