@@ -11,7 +11,8 @@ from hospwork.tool.job import findjobtype,clean_unused_str
 class Vhcy(Hospital_work):
     def __init__(self):
         self.name = '臺中榮民總醫院嘉義分院'
-        self.url_base='https://www.vhcy.gov.tw'
+        self.local_zone = 'Taiwan'
+        self.url_base = 'https://www.vhcy.gov.tw'
         self.url_work = '/PageView/RowView?WebMenuID=1c791b28-2968-49c9-8d5a-32dceca8ad1b'
         self.url_full = super().url()
         self.work_page_base = get_base_web_data(self.url_full)
@@ -21,12 +22,13 @@ class Vhcy(Hospital_work):
         work_table = []
         exam_table = []
         admit_table = []
-        for p_item in enumerate(self.pages_link):
+        for p_item in self.pages_link:
             table_ = get_work_page(p_item)
             work_table = self._get_work_table(self.url_base,table_,work_table,exam_table,admit_table)
 
         self.work_table=pd.DataFrame(work_table, columns=['召聘職稱','期限' ,"職缺單位" ,'報名簡章'])
-
+        self.exam_table=pd.DataFrame(exam_table, columns=['召聘職稱','連結'])
+        self.admit_table=pd.DataFrame(admit_table, columns=['召聘職稱','連結'])
 
     def _get_pages_link(self,soup,url_base,url_full):
         pages_link=[]
@@ -98,9 +100,9 @@ class Vhcy(Hospital_work):
                 title = p_item_a.text
                 link_s = url_base+p_item_a.get('href')
                 if "錄取公告" in title or "甄試結果公告" in title or "核定" in title:
-                    admit_table.append(title.replace("錄取公告：",""), link_s)
+                    admit_table.append([title.replace("錄取公告：",""), link_s])
                 elif '考試公告' in title:
-                    exam_table.append(title.replace("考試公告：",""), link_s)
+                    exam_table.append([title.replace("考試公告：",""), link_s])
                 else:
                     pass
                 new_title = findjobtype(title)
