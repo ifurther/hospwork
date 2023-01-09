@@ -13,7 +13,7 @@ def findjobtype(job_type)-> str:
 def findjoboriginzation(job_type):
     '''find the job originzation'''
     try:
-        return re.search(r"[教,影,癌,血,牙,腦,骨,巨,工,傳,耳,放,復,營,資,護,家,胸,皮,泌,眼,內,外,藥,麻,臨,急,病,兒,環,健](\w+||)[科,部,室,心,課,處]",job_type).group(0)
+        return re.search(r"[癌,血,牙,腦,骨,巨,工,傳,耳,放,復,營,資,護,家,胸,皮,泌,眼,內,外,藥,麻,臨,急,病,兒,環,健](\w+||)[科,部,室,心,課,處]",job_type).group(0)
     except AttributeError:
         print("Error findjobtype: {}".format(job_type))
         return job_type
