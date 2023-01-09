@@ -5,16 +5,16 @@ import numpy as np
 from tabulate import tabulate
 
 #sys.path.append(Path().cwd().parent.as_posix())
-from . import Csmpt,Ylh,Ntuh,Cych,Vghks,Vghtpe,Hch,Ntucc,Vghtc
+from . import Csmpt,Ylh,Ntuh,Cych,Vghks,Vghtpe,Hch,Ntucc,Vghtc,Cgmh,Vhcy
 from .io.sqlite import to_sqlite
 
 def main():
-    csmpt, ylh, ntuh, cych, vghks, vghtpe, hch, ntucc, vghtc= Csmpt(),Ylh(),Ntuh(),Cych(),Vghks(),Vghtpe(), Hch(), Ntucc(), Vghtc()
+    csmpt, ylh, ntuh, vghks, vghtpe, hch, ntucc, vghtc, cgmh, vhcy = Csmpt(), Ylh(), Ntuh(), Vghks(), Vghtpe(), Hch(), Ntucc(), Vghtc(), Cgmh(), Vhcy()
 
 
     Full_work_table=[]
     Full_admit_table=[]
-    for cc in [csmpt, ylh, ntuh, cych, vghks, vghtpe, hch, ntucc, vghtc]:
+    for cc in [csmpt, ylh, ntuh, hch, ntucc, vghks, vghtpe, vghtc, vhcy, cgmh]:
         cc.get_full_work_table()
         Full_work_table.append(cc.get_full_work_table())
         if len(cc.admit_table) > 0:

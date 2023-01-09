@@ -9,6 +9,7 @@ from .ntucc import Ntucc
 from .cych import Cych
 #from .kmsh import Kmsh
 from .vghtc import Vghtc
+from .vhcy import Vhcy
 from .tool.web import get_base_web_data,get_work_page
 
-__all__ = ["__main__", "hospital_work", "tool", "cgmh", "cych", "hch","ntuh", "ntucc", "vhcy", "vghtc"]
+__all__ = ["__main__", "hospital_work", "tool", "cgmh", "cych", "hch","ntuh", "ntucc", "vhcy", "vghtc", "vghtpe", "vghks", "ylh"]
