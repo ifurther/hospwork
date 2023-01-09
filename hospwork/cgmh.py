@@ -2,6 +2,7 @@ import pandas as pd
 import re
 from hospwork.hospital_work import Hospital_work
 from hospwork.tool.web import get_base_web_data,get_work_page
+from hospwork.tool.job import findjoboriginzation,findjobtype
 from hospwork.error import errormsg
 from urllib.parse import urlparse
 
@@ -11,18 +12,25 @@ class Cgmh(Hospital_work):
         self.local_zone = 'Taiwan'
         self.url_base = 'https://www.cgmh.org.tw/tw/Systems/'
         self.url_work = 'RecruitInfo/3?bulletinType=A&category=Z'
+        self.url_exam = 'RecruitInfo/3?bulletinType=B&category=Z'
+        self.url_admit = 'RecruitInfo/3?bulletinType=C&category=Z'
         self.url_full = super().url()
-        self.work_page_base = get_base_web_data(self.url_full)
-        self.pages = self.work_page_base.find_all('ul' ,class_="layout__pagination ul-reset")[0]
+        self.work_page_base_work = get_base_web_data(self.url_full)
+        self._pages_work = self.work_page_base_work.find_all('ul' ,class_="layout__pagination ul-reset")[0]
+        self.work_page_base_exam = get_base_web_data(self.url_base+self.url_exam)
+        self._pages_exam = self.work_page_base_work.find_all('ul' ,class_="layout__pagination ul-reset")[0]
+        self.work_page_base_admit = get_base_web_data(self.url_base+self.url_admit)
+        self._pages_admit = self.work_page_base_work.find_all('ul' ,class_="layout__pagination ul-reset")[0]
 
         work_table=[]
-        for _page in range(1,self.get_pages(self.pages)+1):
+        admit_table=[]
+        for _page in range(1,self.get_pages(self._pages_work)+1):
             soup_=get_work_page(self.url_full, page=_page, page_link_part='&page=')
             tables = soup_.find('div',class_="bg-grey pd100").find_all('ul')[-2].find_all('li')
             self.get_work_table(self.url_full, soup_, tables, work_table)
-        self.work_table=pd.DataFrame(work_table, columns=['no','召聘職稱','期限' , '詳細連結', '報名連結'])
+        self.work_table=pd.DataFrame(work_table, columns=['no','召聘職稱', "召聘單位", '院區', '期限', '詳細連結', '報名連結'])
+        self.admit_table=pd.DataFrame(admit_table)
 
-    
     def get_pages(self, pages):
         return int(pages.find_all("li")[-2].text)
 
@@ -38,7 +46,7 @@ class Cgmh(Hospital_work):
             return '隨到隨審'
         elif '即日起至招聘完成' in work_detail_web:
             return '即日起至招聘完成'
-        elif '自即日起' in work_detail_web:
+        elif '自即日起' in work_detail_web or '即日起~' in work_detail_web:
             return '自即日起'
         elif '即日起至' in work_detail_web:
             if "止" in work_detail_web.rsplit('即日起至')[1]:
@@ -50,7 +58,7 @@ class Cgmh(Hospital_work):
         elif '即日起收件至' in work_detail_web:
             return work_detail_web.rsplit("即日起收件至")[1].split("止")[0].replace("：","")
         elif '前報名完成' in work_detail_web:
-            return work_detail_web.rsplit("請於")[1].split("前")[0].replace("：","")    
+            return work_detail_web.rsplit("請於")[1].split("前")[0].replace("：","")
         else:
             try:
                 if '截止' in work_detail_web.rsplit("報名期限")[1]:
@@ -64,6 +72,24 @@ class Cgmh(Hospital_work):
                     errormsg(self.name, title)
                     return 'please check webpage'
 
+    def get_hosp_region(self,title):
+        if '林口' in title:
+            return '林口院區'
+        elif '基隆' in title:
+            return '基隆院區'
+        elif '嘉義' in title:
+            return '嘉義院區'
+        elif '高雄' in title:
+            return '高雄院區'
+        elif '桃園' in title:
+            return '桃園院區'
+        elif '台中' in title:
+            return '台中院區'
+        elif '土城' in title:
+            return '土城院區'
+        elif '北院區' in title:
+            return '北院區'
+                
     def get_work_table(self, url_full, soup, tables, work_table):
         for i, item in enumerate(tables):
             if item.find('a'): #過濾掉被刪除的文章
@@ -71,8 +97,18 @@ class Cgmh(Hospital_work):
                 url_base_website = urlparse(url_full)
                 work_detail_link = url_base_website._replace(path=urlparse(s.get('href')).path).geturl()
                 title = item.find_all('div')[1].string
+                if '長庚大學' in title or '甄試結果公告' in title:
+                    break
+                if (new_title :=  findjobtype(title)) and new_title != title:
+                    title_old = title
+                    title = new_title.replace('醫院','')
+                region = self.get_hosp_region((title_ if (title_ := title_old) else title))
+                if (originzation := findjoboriginzation((title_ if (title_ :=  title_old) else title))) and originzation != title:
+                    originzation = originzation
+                else:
+                    originzation = ''
                 work_page_soup = get_work_page(work_detail_link)
                 dead_line = self.get_work_dead_line( work_page_soup ,title)
                 resume_link = 'https://webapp.cgmh.org.tw/resume/adm.ASP'
                 #print('#{}召聘職稱: {} 期限: {}\n 連結：{}'.format(i+1, title, dead_line, work_detail_link ))
-                work_table.append([i-2, title, dead_line, work_detail_link, resume_link ])
+                work_table.append([i-2, title, originzation, region, dead_line, work_detail_link, resume_link ])
