@@ -2,7 +2,7 @@ import pandas as pd
 import re
 from hospwork.hospital_work import Hospital_work
 from hospwork.tool.web import get_base_web_data,get_work_page
-from hospwork.tool.job import findjoboriginzation,findjobtype
+from hospwork.tool.job import findjoboriginzation,findjobtype,clean_unused_str
 from hospwork.error import errormsg
 from urllib.parse import urlparse
 
@@ -96,15 +96,18 @@ class Cgmh(Hospital_work):
                 s = item.find('a')
                 url_base_website = urlparse(url_full)
                 work_detail_link = url_base_website._replace(path=urlparse(s.get('href')).path).geturl()
-                title = item.find_all('div')[1].string
+                title = clean_unused_str(item.find_all('div')[1].string)
                 if '長庚大學' in title or '甄試結果公告' in title:
                     break
                 if (new_title :=  findjobtype(title)) and new_title != title:
                     title_old = title
                     title = new_title.replace('醫院','')
-                region = self.get_hosp_region((title_ if (title_ := title_old) else title))
+                if (region := self.get_hosp_region((title_ if (title_ := title_old) else title))) and region is not None:
+                    region = region
+                    title = title.replace(region,'').replace(region.replace('院區',''),'')
                 if (originzation := findjoboriginzation((title_ if (title_ :=  title_old) else title))) and originzation != title:
                     originzation = originzation
+                    title = title.replace(originzation,'')
                 else:
                     originzation = ''
                 work_page_soup = get_work_page(work_detail_link)
