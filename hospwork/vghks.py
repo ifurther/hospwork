@@ -2,12 +2,14 @@ from urllib.parse import urlparse
 import pandas as pd
 from hospwork.hospital_work import Hospital_work
 from hospwork.tool.web import get_base_web_data,get_work_page
+from hospwork.tool.job import clean_unused_str
 
 class Vghks(Hospital_work):
     def __init__(self):
         self.name = '高雄榮民總醫院'
         self.url_base = 'https://www.vghks.gov.tw'
         self.url_work = '/News.aspx?n=C03011BF96C680C4&sms=5EF61FB0D0F5B657'
+        self.url_admit = '/News.aspx?n=A6CB27885DCE35D9&sms=CB7E1ED53E529904'
         self.url_full = super().url()
         self.work_page_base = get_base_web_data(self.url_full)
         self.pages_table,self.work_tables = self._get_tables_part(self.work_page_base)
@@ -24,11 +26,11 @@ class Vghks(Hospital_work):
                 work_table = self._get_work_table(table_,work_table)
 
         self.work_table=pd.DataFrame(work_table, columns=['召聘職稱','期限' ,"召聘單位" ,'連結'])
-
+        self.admit_table = []
     def _get_pages_link(self,pages_table,page_one=None):
-        if page_one == None:
+        if page_one is None:
             page_one = self.url_full
-        if pages_table == None:
+        if pages_table is None:
             #print("only one page")
             pages_link=None
         else:
@@ -59,7 +61,7 @@ class Vghks(Hospital_work):
                     s = item
                     #print(i, s)
                 else:
-                    title = s.get('title')
+                    title = clean_unused_str(s.get('title'),self.name)
                     link = s.get('href')
                     link_s = urlparse(self.url_full)._replace(path=link,query=[]).geturl()
                     all_td = item.find_all('td')
