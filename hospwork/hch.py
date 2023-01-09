@@ -51,6 +51,8 @@ class Hch(Hospital_work):
                     link['other_file_link'] = url_base+i.get('href')
                 if '信封封面' in i.text :
                     link['letter_file_link'] = url_base+i.get('href')
+                if '分機更新' in i.text:
+                    break
             #print("召聘職稱",title,'院區',place,"截止日期",deadline,"職缺單位",originization,"links",link)
             try:
                 work_table.append([title, deadline, originization, place, 'mail',link['detail_file_link'], link['application_file_link'], link['other_file_link'], link['letter_file_link'] ])
