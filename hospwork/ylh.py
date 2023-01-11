@@ -2,6 +2,7 @@ import pandas as pd
 import re
 from hospwork.hospital_work import Hospital_work
 from hospwork.tool.web import get_base_web_data,get_work_page
+from hospwork.tool.job import findjobtype,clean_unused_str
 
 
 class Ylh(Hospital_work):
@@ -15,12 +16,14 @@ class Ylh(Hospital_work):
         self.pages_link = self._get_pages_link(self.url_full,self.url_base,self.work_page_base)
     
         work_table = []
+        exam_table = []
         admit_table = []
         for page in self.pages_link:
             soup = get_base_web_data(page)
-            self._get_each_page_wrok_table(self.url_base, soup, work_table, admit_table)
+            self._get_each_page_wrok_table(self.url_base, soup, work_table, exam_table, admit_table)
 
         self.work_table = pd.DataFrame(work_table, columns=['召聘職稱','期限' ,"召聘單位" , '院區','連結'])
+        self.exam_table = pd.DataFrame(exam_table, columns=['召聘職稱','期限' ,"召聘單位" , '院區','連結'])
         self.admit_table = pd.DataFrame(admit_table, columns=['召聘職稱','期限' ,"召聘單位" , '院區','連結'])
 
     def _get_pages_link(self,url_full,url_base,soup):
@@ -38,33 +41,32 @@ class Ylh(Hospital_work):
                 else:
                     pages_link.append(url_base+link.find('a').get('href'))
         return pages_link
+
+    def _get_detail_data(self,title, link, new_title, place, deadline, table):
+        try:
+            jobtype = re.search(r"\B院((.*)[室,部,中心])", title).group(1)
+        except:
+            jobtype = "error"
+            print(self.name,'error: find jobtype',title)
+        try:
+            if not new_title:
+                new_title = re.search("\B[聘,選]((.*)[員,師,廚,長])",title).group(1)
+        except:
+            new_title="error"
+            print(self.name,'error: new_title',title,link)
+        #print("召聘職稱",new_title,'院區',place,"截止日期",deadline,"職缺單位",originization,"links",link)
+        table.append([new_title, deadline, jobtype, place, link])
     
-    def _get_each_page_wrok_table(self, url_base, soup, work_table, admit_table):
+    def _get_each_page_wrok_table(self, url_base, soup, work_table, exam_table, admit_table):
         for work in soup.find_all('table',class_="table table-striped table-hover news_table")[0].find("tbody").find_all("tr"):
             all_td = work.find_all("td")
             title = all_td[0].text
             place = '察看連結的簡章'
             deadline = all_td[2].text
             link=url_base+all_td[3].find('a').get('href')
+            new_title = findjobtype(title)
 
-            if "錄取名單" in title:
-                try:
-                    jobtype = re.search(r"\B院((.*)[室,部,中心])", title).group(1)
-                except:
-                    jobtype = "error"
-                    print(self.name,'error: find jobtype',title)
-                try:
-                    new_title = re.search("\B[聘,選]((.*)[員,師,廚,長])",title).group(1)
-                except:
-                    new_title="error"
-                    print(self.name,'error: new_title',title,link)
-                #print("召聘職稱",new_title,'院區',place,"截止日期",deadline,"職缺單位",originization,"links",link)
-                admit_table.append([new_title, deadline, jobtype, place, link])
-            elif "甄試名單" in title:
-                #print('skip: ',title)
-                pass
-            elif "複試名單" in title:
-                #print('skip: ',title)
+            if "承辦人分機更新" in title:
                 pass
             elif "志願服務工作" in title:
                 #print('skip: ',title)
@@ -77,21 +79,17 @@ class Ylh(Hospital_work):
             elif "時薪人員" in title:
                 #print('skip: ',title)
                 pass
+            elif "錄取名單" in title:
+                self._get_detail_data(title, link, new_title, place, deadline, admit_table)
+            elif "甄試名單" in title:
+                #print('skip: ',title)
+                self._get_detail_data(title, link, new_title, place, deadline, exam_table)
+            elif "複試名單" in title:
+                #print('skip: ',title)
+                self._get_detail_data(title, link, new_title, place, deadline, exam_table)
             elif "初試名單" in title:
-                pass
+                self._get_detail_data(title, link, new_title, place, deadline, exam_table)
             elif "初試結果" in title:
-                pass
+                self._get_detail_data(title, link, new_title, place, deadline, exam_table)
             else:
-                try:
-                    jobtype = re.search(r"\B院((.*)[室,部,中心])", title).group(1)
-                except:
-                    jobtype = "error"
-                    print(self.name,'error: find jobtype',title)
-                try:
-                    new_title = re.search("\B[聘,選]((.*)[員,師,廚,長])",title).group(1)
-                except:
-                    new_title="error"
-                    print(self.name,'error: new_title',title,link)
-                #print("召聘職稱",new_title,'院區',place,"截止日期",deadline,"職缺單位",originization,"links",link)
-                work_table.append([new_title, deadline, jobtype, place, link])
-        return work_table
+                self._get_detail_data(title, link, new_title, place, deadline, work_table)
