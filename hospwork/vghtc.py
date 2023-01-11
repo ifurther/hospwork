@@ -69,14 +69,14 @@ class Vghtc(Hospital_work):
                     #print('期限' , ttt.text)
                     _one_job_data['期限'] = ttt.text
                 elif ttt.get('data-th') == '徵才項目':
-                    job_type_clean = clean_unused_str(ttt.text,self.name)
+                    job_type_clean = clean_unused_str(ttt.text, self.name)
                     _one_job_data['召聘職稱'] = job_type_clean
                     try:
                         try:
-                            _one_job_data['召聘單位'] = findjoboriginzation(job_type_clean)
+                            _one_job_data['召聘單位'] = findjoboriginzation(job_type_clean, self.name)
                             _one_job_data['召聘職稱'] = job_type_clean.replace( _one_job_data['召聘單位'],'')
                         except:
-                            _one_job_data['召聘職稱'] = findjobtype(job_type_clean)
+                            _one_job_data['召聘職稱'] = findjobtype(job_type_clean, self.name)
                             _one_job_data['召聘單位'] = None
                     except:
                         print(self.name,ttt.text,'get job origization error')

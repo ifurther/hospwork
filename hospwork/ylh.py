@@ -2,7 +2,7 @@ import pandas as pd
 import re
 from hospwork.hospital_work import Hospital_work
 from hospwork.tool.web import get_base_web_data,get_work_page
-from hospwork.tool.job import findjobtype,clean_unused_str
+from hospwork.tool.job import findjobtype,findjoboriginzation,clean_unused_str
 
 
 class Ylh(Hospital_work):
@@ -20,7 +20,7 @@ class Ylh(Hospital_work):
         admit_table = []
         for page in self.pages_link:
             soup = get_base_web_data(page)
-            self._get_each_page_wrok_table(self.url_base, soup, work_table, exam_table, admit_table)
+            self._get_each_page_wrok_table(soup, work_table, exam_table, admit_table)
 
         self.work_table = pd.DataFrame(work_table, columns=['召聘職稱','期限' ,"召聘單位" , '院區','連結'])
         self.exam_table = pd.DataFrame(exam_table, columns=['召聘職稱','期限' ,"召聘單位" , '院區','連結'])
@@ -42,29 +42,32 @@ class Ylh(Hospital_work):
                     pages_link.append(url_base+link.find('a').get('href'))
         return pages_link
 
-    def _get_detail_data(self,title, link, new_title, place, deadline, table):
+    def _get_detail_data(self,title, all_td, table):
+        place = '察看連結的簡章'
+        deadline = all_td[2].text
+        link=self.url_base+all_td[3].find('a').get('href')
+        jobtype = findjobtype(title, self.name)
         try:
-            jobtype = re.search(r"\B院((.*)[室,部,中心])", title).group(1)
+            if (originzation := findjoboriginzation(title, self.name)) and originzation == title:
+                originzation = re.search(r"\B院((.*)[室,部,中心])", title).group(1)
+            else:
+                originzation = originzation
         except:
-            jobtype = "error"
-            print(self.name,'error: find jobtype',title)
+            originzation = "error"
+            print(self.name,'error: find originzation',title)
         try:
-            if not new_title:
+            if jobtype == title:
                 new_title = re.search("\B[聘,選]((.*)[員,師,廚,長])",title).group(1)
         except:
-            new_title="error"
-            print(self.name,'error: new_title',title,link)
+            jobtype="error"
+            print(self.name,'error find jobtype',title,link)
         #print("召聘職稱",new_title,'院區',place,"截止日期",deadline,"職缺單位",originization,"links",link)
-        table.append([new_title, deadline, jobtype, place, link])
+        table.append([jobtype, deadline, originzation, place, link])
     
-    def _get_each_page_wrok_table(self, url_base, soup, work_table, exam_table, admit_table):
+    def _get_each_page_wrok_table(self, soup, work_table, exam_table, admit_table):
         for work in soup.find_all('table',class_="table table-striped table-hover news_table")[0].find("tbody").find_all("tr"):
             all_td = work.find_all("td")
             title = all_td[0].text
-            place = '察看連結的簡章'
-            deadline = all_td[2].text
-            link=url_base+all_td[3].find('a').get('href')
-            new_title = findjobtype(title)
 
             if "承辦人分機更新" in title:
                 pass
@@ -80,16 +83,16 @@ class Ylh(Hospital_work):
                 #print('skip: ',title)
                 pass
             elif "錄取名單" in title:
-                self._get_detail_data(title, link, new_title, place, deadline, admit_table)
+                self._get_detail_data(title, all_td, admit_table)
             elif "甄試名單" in title:
                 #print('skip: ',title)
-                self._get_detail_data(title, link, new_title, place, deadline, exam_table)
+                self._get_detail_data(title, all_td, exam_table)
             elif "複試名單" in title:
                 #print('skip: ',title)
-                self._get_detail_data(title, link, new_title, place, deadline, exam_table)
+                self._get_detail_data(title, all_td, exam_table)
             elif "初試名單" in title:
-                self._get_detail_data(title, link, new_title, place, deadline, exam_table)
+                self._get_detail_data(title, all_td, exam_table)
             elif "初試結果" in title:
-                self._get_detail_data(title, link, new_title, place, deadline, exam_table)
+                self._get_detail_data(title, all_td, exam_table)
             else:
-                self._get_detail_data(title, link, new_title, place, deadline, work_table)
+                self._get_detail_data(title, all_td, work_table)
