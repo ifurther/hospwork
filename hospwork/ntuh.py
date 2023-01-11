@@ -13,22 +13,30 @@ class Ntuh(Hospital_work):
         self.url_work ='/RecruitAjax!nonDoctor.action'
         self.url_admit = '/RecruitAjax!select.action'
         self.url_full = super().url()
-        #self.work_page_base = get_base_web_data(self.url_full)
-        g=requests.get(self.url_full)
-        #soup=BeautifulSoup(g.content, 'html.parser')
-        #tables = soup.findAll('table')[0].findAll('tr')
-        ntu_work_data=json.loads(g.content)
-        self.admit_table = []
-        totalcount = ntu_work_data['totalcount']
-        totalPages = ntu_work_data['totalPages']
+        self.url_full_admit = super().url_admit()
+        
+        ntuh_work_pages=requests.get(self.url_full)
+        ntuh_admit_pages=requests.get(self.url_full_admit)
+        ntu_work_data=json.loads(ntuh_work_pages.content)
+        ntu_admit_data=json.loads(ntuh_admit_pages.content)
+        totalcount_work = ntu_work_data['totalcount']
+        totalPages_work = ntu_work_data['totalPages']
+        totalcount_admit = ntu_admit_data['totalcount']
+        totalPages_admit = ntu_admit_data['totalPages']
         work_table=[]
-        for _page in range(1,totalPages):
+        for _page in range(1,totalPages_work):
             g=requests.get(self.url_full+'?page='+str(_page))
             ntu_work_data=json.loads(g.content)
-            work_table=self._get_ntuh_work_table_one_page(self.url_base,ntu_work_data,work_table)
+            self._get_ntuh_work_table_one_page(self.url_base,ntu_work_data,work_table)
+        admit_table = []
+        for _page in range(1,totalPages_admit):
+            g=requests.get(self.url_full_admit+'?page='+str(_page))
+            ntu_admit_data=json.loads(g.content)
+            self._get_ntuh_work_table_one_page(self.url_base,ntu_admit_data,admit_table)
 
-        self.work_table=pd.DataFrame(work_table, columns=['召聘職稱','召聘單位','期限' ,'詳細連結','報名連結'])
-        #print('totalcount: {} getdatacount:{}'.format(totalcount,len(work_table)))
+        self.work_table = pd.DataFrame(work_table, columns=['召聘職稱','召聘單位','期限' ,'詳細連結','報名連結'])
+        self.admit_table = pd.DataFrame(admit_table, columns=['召聘職稱','召聘單位','期限' ,'連結','詳細連結']) 
+
 
     def _get_ntuh_work_table_one_page(self, url_base, ntu_work_data, work_table):
         for i, item in enumerate(ntu_work_data['queryList']):
@@ -48,4 +56,3 @@ class Ntuh(Hospital_work):
                 resume_link = ''
             #print('#{}召聘職稱: {} 召聘單位: {}\n 期限: {}\n 連結：{}'.format(i+1, title, origantion, dead_line, link))
             work_table.append([title, origantion, dead_line, detail_link, resume_link])
-        return work_table
