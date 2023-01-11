@@ -34,11 +34,7 @@ class Cgmh(Hospital_work):
     def get_pages(self, pages):
         return int(pages.find_all("li")[-2].text)
 
-    def get_work_dead_line(self, soup, title):
-        try:
-            work_detail_web = soup.find('article').get_text().replace("\xa0","").replace('\n',"").replace("\u3000","")
-        except:
-            raise AttributeError
+    def get_work_dead_line(self, work_detail_web, title):
         if '報名期限展延至' in work_detail_web:
             return re.findall("\d+年\d+月\d+日",work_detail_web.rsplit('報名期限展延至')[1].split("止")[0].replace(' ',''))[0]
         elif '額滿' in work_detail_web:
@@ -106,6 +102,12 @@ class Cgmh(Hospital_work):
                 url_base_website = urlparse(url_full)
                 work_detail_link = url_base_website._replace(path=urlparse(s.get('href')).path).geturl()
                 title = clean_unused_str(item.find_all('div')[1].string,self.name)
+                work_page_soup = get_work_page(work_detail_link)
+                try:
+                    work_detail_web = work_page_soup.find('article').get_text().replace("\xa0","").replace('\n',"").replace("\u3000","")
+                except:
+                    print(work_page_soup)
+                    raise AttributeError
                 if '長庚大學' in title or '甄試結果公告' in title:
                     break
                 if (new_title :=  findjobtype(title, self.name)) and new_title != title:
@@ -117,10 +119,12 @@ class Cgmh(Hospital_work):
                 if (originzation := findjoboriginzation((title_ if (title_ :=  title_old) else title), self.name)) and originzation != title:
                     originzation = originzation
                     title = title.replace(originzation,'')
+                elif (originzation := findjoboriginzation(work_detail_web) ):
+                    originzation = originzation
+                    title = title.replace(originzation,'')
                 else:
                     originzation = ''
-                work_page_soup = get_work_page(work_detail_link)
-                dead_line = self.get_work_dead_line( work_page_soup ,title)
+                dead_line = self.get_work_dead_line( work_detail_web ,title)
                 resume_link = 'https://webapp.cgmh.org.tw/resume/adm.ASP'
                 #print('#{}召聘職稱: {} 期限: {}\n 連結：{}'.format(i+1, title, dead_line, work_detail_link ))
                 work_table.append([i-2, title, originzation, region, dead_line, work_detail_link, resume_link ])
