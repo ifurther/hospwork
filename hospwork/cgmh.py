@@ -34,8 +34,11 @@ class Cgmh(Hospital_work):
     def get_pages(self, pages):
         return int(pages.find_all("li")[-2].text)
 
-    def get_work_dead_line(self, soup, title):  
-        work_detail_web = soup.find('article').get_text().replace("\xa0","").replace('\n',"").replace("\u3000","")
+    def get_work_dead_line(self, soup, title):
+        try:
+            work_detail_web = soup.find('article').get_text().replace("\xa0","").replace('\n',"").replace("\u3000","")
+        except:
+            raise AttributeError
         if '報名期限展延至' in work_detail_web:
             return re.findall("\d+年\d+月\d+日",work_detail_web.rsplit('報名期限展延至')[1].split("止")[0].replace(' ',''))[0]
         elif '額滿' in work_detail_web:
@@ -75,6 +78,8 @@ class Cgmh(Hospital_work):
     def get_hosp_region(self,title):
         if '林口' in title:
             return '林口院區'
+        elif '台北' in title:
+            return '台北院區'
         elif '基隆' in title:
             return '基隆院區'
         elif '嘉義' in title:
@@ -87,21 +92,23 @@ class Cgmh(Hospital_work):
             return '台中院區'
         elif '土城' in title:
             return '土城院區'
+        elif '鳳山' in title:
+            return '鳳山院區'
         elif '北院區' in title:
             return '北院區'
-                
+
     def get_work_table(self, url_full, soup, tables, work_table):
         for i, item in enumerate(tables):
             if item.find('a'): #過濾掉被刪除的文章
                 s = item.find('a')
                 url_base_website = urlparse(url_full)
                 work_detail_link = url_base_website._replace(path=urlparse(s.get('href')).path).geturl()
-                title = clean_unused_str(item.find_all('div')[1].string)
+                title = clean_unused_str(item.find_all('div')[1].string,self.name)
                 if '長庚大學' in title or '甄試結果公告' in title:
                     break
                 if (new_title :=  findjobtype(title)) and new_title != title:
                     title_old = title
-                    title = new_title.replace('醫院','')
+                    title = new_title.replace('醫院','').replace("紀念",'').replace("新北市立","").replace("高雄市立鳳山","")
                 if (region := self.get_hosp_region((title_ if (title_ := title_old) else title))) and region is not None:
                     region = region
                     title = title.replace(region,'').replace(region.replace('院區',''),'')
