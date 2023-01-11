@@ -10,6 +10,6 @@ def test_vghtc():
     vghtc = Vghtc()
     assert vghtc.url_base == 'https://www.vghtc.gov.tw'
     assert isinstance(vghtc.work_table,pd.DataFrame)
-    if not vghtc.work_table.empty:
-        assert not "work table is null"
+    assert not vghtc.work_table.empty, "work_table is null"
     assert isinstance(vghtc.admit_table,pd.DataFrame)
+    assert not vghtc.admit_table.empty, "admit_table is null"
