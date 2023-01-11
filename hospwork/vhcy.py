@@ -5,7 +5,7 @@ import pandas as pd
 import re
 from hospwork.hospital_work import Hospital_work
 from hospwork.tool.web import get_base_web_data,get_work_page
-from hospwork.tool.job import findjobtype,clean_unused_str
+from hospwork.tool.job import findjobtype,findjoboriginzation,clean_unused_str
 
 
 class Vhcy(Hospital_work):
@@ -26,7 +26,7 @@ class Vhcy(Hospital_work):
             table_ = get_work_page(p_item)
             work_table = self._get_work_table(self.url_base,table_,work_table,exam_table,admit_table)
 
-        self.work_table=pd.DataFrame(work_table, columns=['召聘職稱','期限' ,"職缺單位" ,'報名簡章'])
+        self.work_table=pd.DataFrame(work_table, columns=['召聘職稱','期限' ,"召聘單位" ,'報名簡章'])
         self.exam_table=pd.DataFrame(exam_table, columns=['召聘職稱','連結'])
         self.admit_table=pd.DataFrame(admit_table, columns=['召聘職稱','連結'])
 
@@ -43,8 +43,11 @@ class Vhcy(Hospital_work):
         return pages_link
 
     def get_work_detail(self,link):
-        work_detail = get_work_page(link).find("div",class_="newContent").text
-        if work_detail.replace("\n","") == "":
+        try:
+            work_detail = get_work_page(link).find("div",class_="newContent").text
+        except:
+            return None
+        if work_detail is None and work_detail.replace("\n","") == "":
             return None
         else:
             return get_work_page(link).find("div",class_="newContent").text.replace("\r","").replace("\t","").split("\n")
@@ -59,13 +62,10 @@ class Vhcy(Hospital_work):
             if g == None:
                 return "check page"
             try:
-                origination = [gg for gg in g if "職稱" in gg][0].split("：")[-1]
-            except AttributeError:
-                ggg = [gg for gg in g if gg != '']
-                origination = ggg[ggg.index("職稱")+1]
+                origination = findjoboriginzation(g, self.name)
             except:
                 origination = "check page"
-        return origination
+        return origination.replace(self.name,"").replace("醫院","")
 
 
 
@@ -105,7 +105,7 @@ class Vhcy(Hospital_work):
                     exam_table.append([title.replace("考試公告：",""), link_s])
                 else:
                     pass
-                new_title = findjobtype(title)
+                new_title = findjobtype(title, self.name).replace("部契約","契約")
 
                 if self.get_work_detail(link_s) == None:
                     break

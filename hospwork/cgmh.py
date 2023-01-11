@@ -84,6 +84,8 @@ class Cgmh(Hospital_work):
             return '基隆院區'
         elif '嘉義' in title:
             return '嘉義院區'
+        elif '雲林' in title:
+            return '雲林院區'
         elif '高雄' in title:
             return '高雄院區'
         elif '桃園' in title:
@@ -106,13 +108,13 @@ class Cgmh(Hospital_work):
                 title = clean_unused_str(item.find_all('div')[1].string,self.name)
                 if '長庚大學' in title or '甄試結果公告' in title:
                     break
-                if (new_title :=  findjobtype(title)) and new_title != title:
+                if (new_title :=  findjobtype(title, self.name)) and new_title != title:
                     title_old = title
                     title = new_title.replace('醫院','').replace("紀念",'').replace("新北市立","").replace("高雄市立鳳山","")
                 if (region := self.get_hosp_region((title_ if (title_ := title_old) else title))) and region is not None:
                     region = region
                     title = title.replace(region,'').replace(region.replace('院區',''),'')
-                if (originzation := findjoboriginzation((title_ if (title_ :=  title_old) else title))) and originzation != title:
+                if (originzation := findjoboriginzation((title_ if (title_ :=  title_old) else title), self.name)) and originzation != title:
                     originzation = originzation
                     title = title.replace(originzation,'')
                 else:
