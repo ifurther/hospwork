@@ -8,5 +8,8 @@ from hospwork.ntuh import Ntuh
 
 def test_ntuh():
     ntuh = Ntuh()
-    assert ntuh.url_base == 'https://www.ntuh.gov.tw/'
+    assert ntuh.url_base == 'https://www.ntuh.gov.tw/ntuh'
     assert isinstance(ntuh.work_table,pd.DataFrame)
+    assert isinstance(ntuh.admit_table,pd.DataFrame)
+
+    
