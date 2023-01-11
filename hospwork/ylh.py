@@ -46,7 +46,7 @@ class Ylh(Hospital_work):
         place = '察看連結的簡章'
         deadline = all_td[2].text
         link=self.url_base+all_td[3].find('a').get('href')
-        jobtype = findjobtype(title, self.name)
+        jobtype = findjobtype(title, self.name).replace("部","")
         try:
             if (originzation := findjoboriginzation(title, self.name)) and originzation == title:
                 originzation = re.search(r"\B院((.*)[室,部,中心])", title).group(1)
@@ -57,7 +57,7 @@ class Ylh(Hospital_work):
             print(self.name,'error: find originzation',title)
         try:
             if jobtype == title:
-                new_title = re.search("\B[聘,選]((.*)[員,師,廚,長])",title).group(1)
+                new_title = re.search("\B[聘,選]((.*)[員,師,廚,長])",title).group(1).replace("部","")
         except:
             jobtype="error"
             print(self.name,'error find jobtype',title,link)
