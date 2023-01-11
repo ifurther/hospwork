@@ -1,8 +1,11 @@
 class Hospital_work():
     def __init__(self):
         self.url_full = self.url()
+        self.url_full_admit = self.url_admit()
     def url(self):
         return self.url_base+self.url_work
+    def url_admit(self):
+        return self.url_base+self.url_admit
     def get_wrok_table(self):
         pass
     def get_full_work_table(self):
