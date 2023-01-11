@@ -3,6 +3,8 @@
 
 import pandas as pd
 import re
+from datetime import time
+import random
 from hospwork.hospital_work import Hospital_work
 from hospwork.tool.web import get_base_web_data,get_work_page
 from hospwork.tool.job import findjobtype,findjoboriginzation,clean_unused_str
@@ -44,6 +46,7 @@ class Vhcy(Hospital_work):
 
     def get_work_detail(self,link):
         try:
+            time.sleep(random.uniform(1, 5))
             work_detail = get_work_page(link).find("div",class_="newContent").text
         except:
             return None
