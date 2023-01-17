@@ -13,6 +13,11 @@ class Hospital_work():
         full_work_table['source'] = self.name
         self.full_work_table = full_work_table
         return self.full_work_table
+    def get_full_exam_table(self):
+        full_exam_table = self.exam_table
+        full_exam_table['source'] = self.name
+        self.full_exam_table = full_exam_table
+        return self.full_admit_table
     def get_full_admit_table(self):
         full_admit_table = self.admit_table
         full_admit_table['source'] = self.name
