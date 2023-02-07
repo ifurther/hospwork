@@ -17,7 +17,7 @@ class Hospital_work():
         full_exam_table = self.exam_table
         full_exam_table['source'] = self.name
         self.full_exam_table = full_exam_table
-        return self.full_admit_table
+        return self.full_exam_table
     def get_full_admit_table(self):
         full_admit_table = self.admit_table
         full_admit_table['source'] = self.name
