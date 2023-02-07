@@ -15,10 +15,11 @@ class Ylh(Hospital_work):
         self.url_full = super().url()
         self.work_page_base = get_base_web_data(self.url_full)
         self.pages_link = self._get_pages_link(self.url_full,self.url_base,self.work_page_base)
-    
+
         work_table = []
         exam_table = []
         admit_table = []
+
         for page in self.pages_link:
             soup = get_base_web_data(page)
             self._get_each_page_wrok_table(soup, work_table, exam_table, admit_table)
@@ -64,7 +65,7 @@ class Ylh(Hospital_work):
             print(self.name,'error find jobtype',title,link)
         #print("召聘職稱",new_title,'院區',place,"截止日期",deadline,"職缺單位",originization,"links",link)
         table.append([jobtype, deadline, originzation, place, link])
-    
+
     def _get_each_page_wrok_table(self, soup, work_table, exam_table, admit_table):
         for work in soup.find_all('table',class_="table table-striped table-hover news_table")[0].find("tbody").find_all("tr"):
             all_td = work.find_all("td")
@@ -86,10 +87,8 @@ class Ylh(Hospital_work):
             elif "錄取名單" in title:
                 self._get_detail_data(title, all_td, admit_table)
             elif "甄試名單" in title:
-                #print('skip: ',title)
                 self._get_detail_data(title, all_td, exam_table)
             elif "複試名單" in title:
-                #print('skip: ',title)
                 self._get_detail_data(title, all_td, exam_table)
             elif "初試名單" in title:
                 self._get_detail_data(title, all_td, exam_table)
