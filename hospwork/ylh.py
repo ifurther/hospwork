@@ -3,6 +3,7 @@ import re
 from hospwork.hospital_work import Hospital_work
 from hospwork.tool.web import get_base_web_data,get_work_page
 from hospwork.tool.job import findjobtype,findjoboriginzation,clean_unused_str
+from hospwork.tool.time import clean_date
 
 
 class Ylh(Hospital_work):
@@ -44,7 +45,7 @@ class Ylh(Hospital_work):
 
     def _get_detail_data(self,title, all_td, table):
         place = '察看連結的簡章'
-        deadline = all_td[2].text
+        deadline = clean_date(all_td[2].text)
         link=self.url_base+all_td[3].find('a').get('href')
         jobtype = findjobtype(title, self.name).replace("部","")
         try:
