@@ -38,7 +38,7 @@ class Cgmh(Hospital_work):
         return int(pages.find_all("li")[-2].text)
 
     def get_work_dead_line(self, work_detail_web, title):
-        work_detail_web = work_detail_web.replace('(日) ','')
+        work_detail_web = work_detail_web.replace('(日) ','').replace('(日)','').replace('（含）','').replace('即日起，至','即日起至')
         if '報名期限展延至' in work_detail_web:
             return re.findall("\d+年\d+月\d+日",work_detail_web.rsplit('報名期限展延至')[1].split("止")[0].replace(' ',''))[0]
         elif '額滿' in work_detail_web:
@@ -51,12 +51,11 @@ class Cgmh(Hospital_work):
             return '即日起至招聘完成'
         elif '自即日起' in work_detail_web or '即日起~' in work_detail_web:
             return '自即日起'
-        elif '即日起至' in work_detail_web or '即日起，至' in work_detail_web:
-            work_detail_web = work_detail_web.replace('即日起，至','即日起至')
-            if "止" in work_detail_web.rsplit('即日起至')[1]:
-                return re.findall("\d+年\d+月\d+日",work_detail_web.rsplit('即日起至')[1].split("止")[0].replace(' ',''))[0]
-            elif "前" in work_detail_web:
-                return re.findall("\d+年\d+月\d+日",work_detail_web.rsplit('即日起至')[1].split("前")[0].replace(' ',''))[0]
+        elif '即日起至' in work_detail_web:
+            if (new_work_detail_web := work_detail_web.rsplit('即日起至')[1]) and "止" in new_work_detail_web:
+                return clean_date(new_work_detail_web.split("止")[0].replace(' ',''), self.name)
+            elif (new_work_detail_web := work_detail_web.rsplit('即日起至')[1]) and  "前" in work_detail_web:
+                return clean_date(new_work_detail_web.split("前")[0].replace(' ',''), self.name)
             elif "/" in work_detail_web.rsplit('即日起至')[1]:
                 return re.findall("\d+/\d+/\d+",work_detail_web.rsplit('即日起至')[1].split("。")[0].replace(' ',''))[0]
         elif '即日起收件至' in work_detail_web:
@@ -141,7 +140,8 @@ class Cgmh(Hospital_work):
                     resume_link = ''
                     apply_type = 'mail'                
                 else:
-                    pass
+                    resume_link = None
+                    apply_type = None
                 #print('#{}召聘職稱: {} 期限: {}\n 連結：{}'.format(i+1, title, dead_line, work_detail_link ))
 
                 if '口試' in title or '筆試' in title:
