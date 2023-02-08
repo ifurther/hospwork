@@ -22,12 +22,16 @@ def main():
 
             if hasattr(cc, 'exam_table') and len(cc.exam_table) > 0:
                 Full_exam_table.append(cc.get_full_exam_table())
-            if len(cc.admit_table) > 0:
+            else:
+                print(cc.name,' don\'t have exam table')
+            if hasattr(cc, 'admit_table') and len(cc.admit_table) > 0:
                 Full_admit_table.append(cc.get_full_admit_table())
-
+            else:
+                print(cc.name,' don\'t have admit table')
 
 
     Full_work_table=pd.concat(Full_work_table, ignore_index=True).convert_dtypes()
+    Full_exam_table=pd.concat(Full_exam_table, ignore_index=True).convert_dtypes()    
     Full_admit_table=pd.concat(Full_admit_table, ignore_index=True).convert_dtypes()
     Full_work_table['期限'] = Full_work_table['期限'].astype('str')
     Full_admit_table['期限'] = Full_admit_table['期限'].astype('str')
@@ -39,6 +43,7 @@ def main():
     #print(g)
     print(tabulate(g, headers='keys', tablefmt="pretty"))
     to_sqlite(Full_work_table)
+    to_sqlite(Full_exam_table,table_name = 'exam_table')
     to_sqlite(Full_admit_table,table_name = 'admit_table')
     #g.to_csv('test.csv')
 
