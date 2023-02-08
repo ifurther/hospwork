@@ -12,9 +12,10 @@ class Vghtc(Hospital_work):
         self.url_work = '/Module/RecruitMent?WebMenuID=9d005e46-411b-46fc-b438-e0bd561eba78'
         self.url_admit = '/Module/Admission?WebMenuID=9d005e46-411b-46fc-b438-e0bd561eba78'
         self.url_full = super().url()
+        self.url_full_admit = super().get_url_full_admit()
         self.work_page_base = get_base_web_data(self.url_full)
         self.page_links = self.get_page_links(self.url_base, self.url_full, self.work_page_base)
-        self.admit_page_base = get_base_web_data(self.url_base+self.url_admit)
+        self.admit_page_base = get_base_web_data(self.url_full_admit)
         self.admit_tables = self.admit_page_base.find_all('tr')
 
         work_table=[]
@@ -32,21 +33,9 @@ class Vghtc(Hospital_work):
             self.work_table=work_table
 
         admit_table=[]
-        for tt in self.admit_tables:
-            _admit_data = {}
-            for ttt in tt.findAll('td'):
-                if ttt.get('data-th') == "徵才項目":
-                    _admit_data['召聘職稱'] = ttt.text.replace("【錄取公告】","").replace("	","")
-                elif ttt.get('data-th') == '公告迄日':
-                    _admit_data['期限'] = ttt.text
-                elif ttt.get('data-th') == '錄取名單':
-                    job_detail_link = ttt.find('a')
-                    _admit_data['連結'] = self.url_base+job_detail_link.get('href')
-                else:
-                    print("Error",self.name, ttt , "other message")
-            if not bool(_admit_data):
-                admit_table.append(_admit_data)
-        self.admit_table=pd.DataFrame(admit_table, columns=['召聘職稱','期限' ,'連結'])
+        self.get_admit_table(self.admit_tables, admit_table)
+        if bool(admit_table):
+            self.admit_table=pd.DataFrame(admit_table, columns=['召聘職稱','期限' ,'連結'])
 
     def get_page_links(self, url_base, url_full, work_page_base):
         pages_link = []
@@ -88,4 +77,18 @@ class Vghtc(Hospital_work):
             if _one_job_data:
                 work_table.append(_one_job_data)
 
-
+    def get_admit_table(self, admit_tables, admit_table):
+        for tt in admit_tables:
+            _admit_data = {}
+            for ttt in tt.findAll('td'):
+                if ttt.get('data-th') == "徵才項目":
+                    _admit_data['召聘職稱'] = ttt.text.replace("【錄取公告】","").replace("	","")
+                elif ttt.get('data-th') == '公告迄日':
+                    _admit_data['期限'] = ttt.text
+                elif ttt.get('data-th') == '錄取名單':
+                    job_detail_link = ttt.find('a')
+                    _admit_data['連結'] = self.url_base+job_detail_link.get('href')
+                else:
+                    print("Error",self.name, ttt , "other message")
+            if not bool(_admit_data):
+                admit_table.append(_admit_data)
