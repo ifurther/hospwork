@@ -2,10 +2,11 @@ import re
 
 def clean_unused_str(job_text,name)->str:
     '''clean the unused text'''
-    clean_job_text = job_text.replace('：','').replace("-","")
+    clean_job_text = job_text.replace('：','').replace("-","").replace(" ","")
     clean_job_text = clean_job_text.replace('【徵才公告】','').replace("【徵的就是你/妳】","")
     clean_job_text = clean_job_text.replace(name,'').replace('【徵才】','').replace("】","")
     clean_job_text = clean_job_text.replace("【","").replace('，請查照。','').replace("，請 查照。","")
+    clean_job_text = clean_job_text.replace("\xa0","").replace('\n',"").replace("\u3000","")
     return clean_job_text
 def findjobtype(job_type,name)-> str:
     '''find the job type'''
