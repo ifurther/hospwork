@@ -109,7 +109,7 @@ class Cgmh(Hospital_work):
                 title_old = title
                 work_page_soup = get_work_page(work_detail_link)
                 try:
-                    work_detail_web = work_page_soup.find('article').get_text().replace("\xa0","").replace('\n',"").replace("\u3000","")
+                    work_detail_web = clean_unused_str(work_page_soup.find('article').get_text(), self.name)
                 except:
                     print(work_page_soup)
                     raise AttributeError
@@ -121,7 +121,9 @@ class Cgmh(Hospital_work):
                 if (region := self.get_hosp_region((title_ if (title_ := title_old) else title))) and region is not None:
                     region = region
                     title = title.replace(region,'').replace(region.replace('院區',''),'')
-                if (originzation := findjoboriginzation((title_ if (title_ :=  title_old) else title), self.name)) and originzation != title:
+                if '工作地點' in work_detail_web:
+                    originzation = findjoboriginzation(work_detail_web.rsplit('工作地點')[1], self.name)
+                elif (originzation := findjoboriginzation((title_ if (title_ :=  title_old) else title), self.name)) and originzation != title:
                     originzation = originzation
                     title = title.replace(originzation,'')
                 elif (originzation := findjoboriginzation(work_detail_web, self.name) ):
