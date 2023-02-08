@@ -14,7 +14,7 @@ class Ntuh(Hospital_work):
         self.url_work ='/RecruitAjax!nonDoctor.action'
         self.url_admit = '/RecruitAjax!select.action'
         self.url_full = super().url()
-        self.url_full_admit = super().url_full_admit()
+        self.url_full_admit = super().get_url_full_admit()
 
         ntuh_work_pages=requests.get(self.url_full)
         ntuh_admit_pages=requests.get(self.url_full_admit)
