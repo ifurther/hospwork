@@ -4,7 +4,8 @@ import requests
 import json
 from hospwork.hospital_work import Hospital_work
 from hospwork.tool.web import get_base_web_data,get_work_page
-
+from hospwork.tool.job import clean_unused_str
+from hospwork.tool.time import clean_date
 
 class Ntuh(Hospital_work):
     def __init__(self):
@@ -14,7 +15,7 @@ class Ntuh(Hospital_work):
         self.url_admit = '/RecruitAjax!select.action'
         self.url_full = super().url()
         self.url_full_admit = super().url_admit()
-        
+
         ntuh_work_pages=requests.get(self.url_full)
         ntuh_admit_pages=requests.get(self.url_full_admit)
         ntu_work_data=json.loads(ntuh_work_pages.content)
@@ -40,10 +41,13 @@ class Ntuh(Hospital_work):
 
     def _get_ntuh_work_table_one_page(self, url_base, ntu_work_data, work_table):
         for i, item in enumerate(ntu_work_data['queryList']):
-            title = item['title']
+            title = clean_unused_str(item['title'],self.name)
             origantion = item['jobDepno']
             begin_date = item['adate_sh']
-            dead_line = item['edatestr']
+            if item['edatestr'] is not '':
+                dead_line = clean_date(item['edatestr'].replace('至',''), self.name)
+            else:
+                dead_line = 'please check page'
 
             if item['recruitNo'] and "分院" not in origantion:
                 #link = 'https://reg.ntuh.gov.tw/WebApplication/Administration/NtuhGeneralSelect/Entry.aspx?selectno='+item['recruitNo']
