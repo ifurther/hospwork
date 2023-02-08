@@ -16,11 +16,13 @@ class Cgmh(Hospital_work):
         self.url_exam = 'RecruitInfo/3?bulletinType=B&category=Z'
         self.url_admit = 'RecruitInfo/3?bulletinType=C&category=Z'
         self.url_full = super().url()
+        self.url_full_exam = super().get_url_full_exam()
+        self.url_full_admit = super().get_url_full_exam()
         self.work_page_base_work = get_base_web_data(self.url_full)
         self._pages_work = self.work_page_base_work.find_all('ul' ,class_="layout__pagination ul-reset")[0]
-        self.work_page_base_exam = get_base_web_data(self.url_base+self.url_exam)
+        self.work_page_base_exam = get_base_web_data(self.url_full_exam)
         self._pages_exam = self.work_page_base_work.find_all('ul' ,class_="layout__pagination ul-reset")[0]
-        self.work_page_base_admit = get_base_web_data(self.url_base+self.url_admit)
+        self.work_page_base_admit = get_base_web_data(self.url_full_admit)
         self._pages_admit = self.work_page_base_work.find_all('ul' ,class_="layout__pagination ul-reset")[0]
 
         work_table = []
@@ -32,7 +34,7 @@ class Cgmh(Hospital_work):
             self.get_work_table(self.url_full, soup_, tables, work_table, exam_table, admit_table)
         self.work_table=pd.DataFrame(work_table, columns=['召聘職稱', "召聘單位", '院區', '期限', '詳細連結', '報名方式','報名連結'])
         self.exam_table=pd.DataFrame(exam_table)
-        self.admit_table=pd.DataFrame(admit_table)
+        self.admit_table=pd.DataFrame(admit_table, columns=['召聘職稱', "召聘單位", '院區', '期限', '詳細連結'])
 
     def get_pages(self, pages):
         return int(pages.find_all("li")[-2].text)
@@ -132,7 +134,7 @@ class Cgmh(Hospital_work):
                 else:
                     originzation = ''
                 dead_line = self.get_work_dead_line( work_detail_web ,title)
-                if '線上登錄履歷' in work_detail_web:
+                if '線上登錄履歷' in work_detail_web or '網路報名' in work_detail_web:
                     resume_link = 'https://webapp.cgmh.org.tw/resume/adm.ASP'
                     apply_type = 'online'
                 elif 'E-mail' in work_detail_web or re.search('\w+@\w+.\w+.\w+',work_detail_web):
@@ -144,15 +146,14 @@ class Cgmh(Hospital_work):
                 else:
                     resume_link = None
                     apply_type = None
-                #print('#{}召聘職稱: {} 期限: {}\n 連結：{}'.format(i+1, title, dead_line, work_detail_link ))
 
-                if '口試' in title or '筆試' in title:
+                if '口試' in title_old or '筆試' in title_old:
                     exam_table.append([title, originzation, region, dead_line, work_detail_link])
-                elif '甄試結果' in title:
+                elif '甄試結果' in title_old:
                     admit_table.append([title, originzation, region, work_detail_link])
                 else:
                     if apply_type is not None:
                         work_table.append([title, originzation, region, dead_line, work_detail_link, apply_type, resume_link ])
 
                     else:
-                        print(self.name,'Error find resume:',title,work_detail_link)
+                        print(self.name,'Error find resume:',title_old,work_detail_link)
