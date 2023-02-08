@@ -46,7 +46,7 @@ class Ylh(Hospital_work):
 
     def _get_detail_data(self,title, all_td, table):
         place = '察看連結的簡章'
-        deadline = clean_date(all_td[2].text)
+        deadline = clean_date(all_td[2].text, self.name)
         link=self.url_base+all_td[3].find('a').get('href')
         jobtype = findjobtype(title, self.name).replace("部","")
         try:
