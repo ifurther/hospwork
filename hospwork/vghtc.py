@@ -90,5 +90,5 @@ class Vghtc(Hospital_work):
                     _admit_data['連結'] = self.url_base+job_detail_link.get('href')
                 else:
                     print("Error",self.name, ttt , "other message")
-            if not bool(_admit_data):
+            if bool(_admit_data):
                 admit_table.append(_admit_data)
