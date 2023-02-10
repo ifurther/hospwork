@@ -32,9 +32,13 @@ class Cgmh(Hospital_work):
             soup_=get_work_page(self.url_full, page=_page, page_link_part='&page=')
             tables = soup_.find('div',class_="bg-grey pd100").find_all('ul')[-2].find_all('li')
             self.get_work_table(self.url_full, soup_, tables, work_table, exam_table, admit_table)
+        for _page in range(1,self.get_pages(self._pages_admit)+1):
+            soup_=get_work_page(self.url_full_admit, page=_page, page_link_part='&page=')
+            tables = soup_.find('div',class_="bg-grey pd100").find_all('ul')[-2].find_all('li')
+            self.get_work_table(self.url_full, soup_, tables, work_table, exam_table, admit_table)
         self.work_table=pd.DataFrame(work_table, columns=['召聘職稱', "召聘單位", '院區', '期限', '詳細連結', '報名方式','報名連結'])
         self.exam_table=pd.DataFrame(exam_table, columns=['召聘職稱', "召聘單位", '院區', '期限', '詳細連結'])
-        self.admit_table=pd.DataFrame(admit_table, columns=['召聘職稱', "召聘單位", '院區', '期限', '詳細連結'])
+        self.admit_table=pd.DataFrame(admit_table, columns=['召聘職稱', "召聘單位", '院區', '詳細連結'])
 
     def get_pages(self, pages):
         return int(pages.find_all("li")[-2].text)
