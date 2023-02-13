@@ -24,9 +24,9 @@ class Ylh(Hospital_work):
             soup = get_base_web_data(page)
             self._get_each_page_wrok_table(soup, work_table, exam_table, admit_table)
 
-        self.work_table = pd.DataFrame(work_table, columns=['召聘職稱','期限' ,"召聘單位" , '院區','連結'])
-        self.exam_table = pd.DataFrame(exam_table, columns=['召聘職稱','期限' ,"召聘單位" , '院區','連結'])
-        self.admit_table = pd.DataFrame(admit_table, columns=['召聘職稱','期限' ,"召聘單位" , '院區','連結'])
+        self.work_table = pd.DataFrame(work_table, columns=['召聘職稱','期限' ,"召聘單位" , '院區','詳細連結'])
+        self.exam_table = pd.DataFrame(exam_table, columns=['召聘職稱','期限' ,"召聘單位" , '院區','詳細連結'])
+        self.admit_table = pd.DataFrame(admit_table, columns=['召聘職稱','期限' ,"召聘單位" , '院區','詳細連結'])
 
     def _get_pages_link(self,url_full,url_base,soup):
         pages_link=[]
@@ -48,7 +48,7 @@ class Ylh(Hospital_work):
         place = '察看連結的簡章'
         deadline = clean_date(all_td[2].text, self.name)
         link=self.url_base+all_td[3].find('a').get('href')
-        jobtype = findjobtype(title, self.name).replace("部","")
+        jobtype = findjobtype(title, self.name).replace("部","").replace("科","")
         try:
             if (originzation := findjoboriginzation(title, self.name)) and originzation == title:
                 originzation = re.search(r"\B院((.*)[室,部,中心])", title).group(1)
