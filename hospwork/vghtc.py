@@ -35,7 +35,7 @@ class Vghtc(Hospital_work):
         admit_table=[]
         self.get_admit_table(self.admit_tables, admit_table)
         if bool(admit_table):
-            self.admit_table=pd.DataFrame(admit_table, columns=['召聘職稱','期限' ,'連結'])
+            self.admit_table=pd.DataFrame(admit_table, columns=['召聘職稱','期限' ,'詳細連結'])
 
     def get_page_links(self, url_base, url_full, work_page_base):
         pages_link = []
@@ -87,7 +87,7 @@ class Vghtc(Hospital_work):
                     _admit_data['期限'] = ttt.text
                 elif ttt.get('data-th') == '錄取名單':
                     job_detail_link = ttt.find('a')
-                    _admit_data['連結'] = self.url_base+job_detail_link.get('href')
+                    _admit_data['詳細連結'] = self.url_base+job_detail_link.get('href')
                 else:
                     print("Error",self.name, ttt , "other message")
             if bool(_admit_data):
