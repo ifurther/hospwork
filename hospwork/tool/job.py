@@ -13,7 +13,7 @@ def findjobtype(job_type,name)-> str:
     if '專任研究助理' in job_type:
         return '專任研究助理'
     try:
-        return re.search(r"\B[行,課,科,短,社,契,牙,秘,醫,部,室,門,招,募,誠,聘](.*)[員,理,工,師,生,廚]",job_type).group(0).replace("招募","").replace('募','').replace("聘","")
+        return re.search(r"\B[處,行,課,科,短,社,契,牙,秘,醫,部,室,門,招,募,誠,聘](.*)[員,理,工,師,生,廚,士]",job_type).group(0).replace("招募","").replace('募','').replace("聘","")
     except AttributeError:
         print("{} Error find job type: {}".format(name, job_type))
         return job_type
