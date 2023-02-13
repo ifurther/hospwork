@@ -38,7 +38,7 @@ class Cgmh(Hospital_work):
             self.get_work_table(self.url_full, soup_, tables, work_table, exam_table, admit_table)
         self.work_table=pd.DataFrame(work_table, columns=['召聘職稱', "召聘單位", '院區', '期限', '詳細連結', '報名方式','報名連結'])
         self.exam_table=pd.DataFrame(exam_table, columns=['召聘職稱', "召聘單位", '院區', '期限', '詳細連結'])
-        self.admit_table=pd.DataFrame(admit_table, columns=['召聘職稱', "召聘單位", '院區', '連結'])
+        self.admit_table=pd.DataFrame(admit_table, columns=['召聘職稱', "召聘單位", '院區', '詳細連結'])
 
     def get_pages(self, pages):
         return int(pages.find_all("li")[-2].text)
@@ -151,7 +151,7 @@ class Cgmh(Hospital_work):
                     resume_link = None
                     apply_type = None
 
-                if '口試' in title_old or '筆試' in title_old:
+                if '口試' in title_old or '筆試' in title_old or '甄試事宜' in title_old or '甄試日期' in title_old:
                     exam_table.append([title, originzation, region, dead_line, work_detail_link])
                 elif '甄試結果' in title_old:
                     admit_table.append([title, originzation, region, work_detail_link])
