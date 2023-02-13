@@ -21,7 +21,7 @@ class Csmpt(Hospital_work):
 
             work_table = self._get_work_table(table_,self.url_base,work_table)
 
-        self.work_table=pd.DataFrame(work_table, columns=['召聘職稱','期限' ,'連結'])
+        self.work_table=pd.DataFrame(work_table, columns=['召聘職稱','期限' ,'詳細連結'])
 
     def _get_pages_link(self,soup,url):
         pages_link=[]
