@@ -1,11 +1,12 @@
 import pandas as pd
 from hospwork.hospital_work import Hospital_work
-from hospwork.tool import get_base_web_data,get_work_page
+from hospwork.tool.web import get_base_web_data,get_work_page
 
 
 class Vghtpe(Hospital_work):
     def __init__(self):
         self.name = '台北榮民總醫院'
+        self.local_zone = 'Taiwan'
         self.url_base = 'https://www1.vghtpe.gov.tw/conscribe/'
         self.url_work = 'indexb.htm?openExternalBrowser=1'
         self.url_full = super().url()

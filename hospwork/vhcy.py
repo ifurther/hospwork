@@ -3,27 +3,34 @@
 
 import pandas as pd
 import re
+from datetime import time
+import random
 from hospwork.hospital_work import Hospital_work
-from hospwork.tool import get_base_web_data,get_work_page
+from hospwork.tool.web import get_base_web_data,get_work_page
+from hospwork.tool.job import findjobtype,findjoboriginzation,clean_unused_str
+
 
 class Vhcy(Hospital_work):
     def __init__(self):
-        self.name = '台北榮民總醫院'
-        self.url_base='https://www.vhcy.gov.tw'
+        self.name = '臺中榮民總醫院嘉義分院'
+        self.local_zone = 'Taiwan'
+        self.url_base = 'https://www.vhcy.gov.tw'
         self.url_work = '/PageView/RowView?WebMenuID=1c791b28-2968-49c9-8d5a-32dceca8ad1b'
         self.url_full = super().url()
         self.work_page_base = get_base_web_data(self.url_full)
         self.work_page_work_table = self.work_page_base.find("tbody")
         self.pages_link = self._get_pages_link(self.work_page_base,self.url_base,self.url_full)
-        
-        work_table=[]
-        for p_i, p_item in enumerate(self.pages_link):
+
+        work_table = []
+        exam_table = []
+        admit_table = []
+        for p_item in self.pages_link:
             table_ = get_work_page(p_item)
+            work_table = self._get_work_table(self.url_base,table_,work_table,exam_table,admit_table)
 
-            work_table = self._get_work_table(self.url_base,table_,work_table)
-
-        self.work_table=pd.DataFrame(work_table, columns=['召聘職稱','期限' ,"職缺單位" ,'報名簡章'])
-
+        self.work_table=pd.DataFrame(work_table, columns=['召聘職稱','期限' ,"召聘單位" ,'報名簡章'])
+        self.exam_table=pd.DataFrame(exam_table, columns=['召聘職稱','連結'])
+        self.admit_table=pd.DataFrame(admit_table, columns=['召聘職稱','連結'])
 
     def _get_pages_link(self,soup,url_base,url_full):
         pages_link=[]
@@ -38,20 +45,15 @@ class Vhcy(Hospital_work):
         return pages_link
 
     def get_work_detail(self,link):
-        work_detail = get_work_page(link).find("div",class_="newContent").text
-        if work_detail.replace("\n","") == "":
+        try:
+            time.sleep(random.uniform(1, 5))
+            work_detail = get_work_page(link).find("div",class_="newContent").text
+        except:
+            return None
+        if work_detail is None and work_detail.replace("\n","") == "":
             return None
         else:
             return get_work_page(link).find("div",class_="newContent").text.replace("\r","").replace("\t","").split("\n")
-
-
-
-    def get_work_title(self,title):
-        try:
-            new_title = re.search("\B[科,短,社,契,牙,秘,醫,部,室](.*)[員,理,工,師,生]",title).group(0)
-        except AttributeError:
-            print("ERROR:",title)
-        return new_title
 
 
 
@@ -63,13 +65,10 @@ class Vhcy(Hospital_work):
             if g == None:
                 return "check page"
             try:
-                origination = [gg for gg in g if "職稱" in gg][0].split("：")[-1]
-            except AttributeError:
-                ggg = [gg for gg in g if gg != '']
-                origination = ggg[ggg.index("職稱")+1]
+                origination = findjoboriginzation(g, self.name)
             except:
                 origination = "check page"
-        return origination
+        return origination.replace(self.name,"").replace("醫院","")
 
 
 
@@ -97,15 +96,20 @@ class Vhcy(Hospital_work):
                 dead = "check page"
             return dead
 
-    def _get_work_table(self,url_base,table_,work_table):
+    def _get_work_table(self,url_base,table_,work_table,exam_table,admit_table):
         for p_i, p_item in enumerate(table_.find_all("tr")):
             if p_item.find('a'):
                 p_item_a = p_item.find('a')
                 title = p_item_a.text
-                if "錄取公告" in title or '考試公告' in title or "甄試結果公告" in title or "核定" in title:
-                    break
-                new_title = self.get_work_title(title)
                 link_s = url_base+p_item_a.get('href')
+                if "錄取公告" in title or "甄試結果公告" in title or "核定" in title:
+                    admit_table.append([title.replace("錄取公告：",""), link_s])
+                elif '考試公告' in title:
+                    exam_table.append([title.replace("考試公告：",""), link_s])
+                else:
+                    pass
+                new_title = findjobtype(title, self.name).replace("部契約","契約")
+
                 if self.get_work_detail(link_s) == None:
                     break
                 origination = self.get_work_originazation(title,link_s)

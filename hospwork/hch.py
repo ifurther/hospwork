@@ -1,12 +1,13 @@
 import pandas as pd
 import re
 from hospwork.hospital_work import Hospital_work
-from hospwork.tool import get_base_web_data,get_work_page
+from hospwork.tool.web import get_base_web_data,get_work_page
 from hospwork.error import errormsg
 
 class Hch(Hospital_work):
     def __init__(self):
         self.name = '國立臺灣大學醫學院附設醫院新竹臺大分院'
+        self.local_zone = 'Taiwan'
         self.url_base = 'https://www.hch.gov.tw'
         self.url_work = '/?aid=506&pid=0&page_name=list&pageNo=1'
         self.url_full = super().url()
@@ -17,8 +18,8 @@ class Hch(Hospital_work):
         for page in self.pages_link:
             soup = get_base_web_data(page)
             work_table = self._get_each_page_wrok_table(self.url_base,soup,work_table)
-        self.work_table = pd.DataFrame(work_table, columns=['召聘職稱','期限' ,"職缺單位" , '院區', '報名方式', '報名簡章', '報名表', '作業基金現職人員申請院內外補同意書', '信封封面'])
-
+        self.work_table = pd.DataFrame(work_table, columns=['召聘職稱','期限' ,"召聘單位" , '院區', '報名方式', '報名簡章', '報名表', '作業基金現職人員申請院內外補同意書', '信封封面'])
+        #self.admit_table = [] # no admit table
     def _get_pages_link(self,soup,url_full):
         pages_link=[]
         for link in soup.find('ul',class_="pagination pagination-sm justify-content-center"):
@@ -44,12 +45,14 @@ class Hch(Hospital_work):
                 link[i.text]=url_base+i.get('href')
                 if '簡則' in i.text :
                     link['detail_file_link'] = url_base+i.get('href')
-                if '台大醫院新竹臺大分院各類人員甄選登記表及查核授權書' in i.text :
+                if '授權書' in i.text :
                     link['application_file_link'] = url_base+i.get('href')
                 if '作業基金現職人員申請院內外補同意書' in i.text :
                     link['other_file_link'] = url_base+i.get('href')
                 if '信封封面' in i.text :
                     link['letter_file_link'] = url_base+i.get('href')
+                if '分機更新' in i.text:
+                    break
             #print("召聘職稱",title,'院區',place,"截止日期",deadline,"職缺單位",originization,"links",link)
             try:
                 work_table.append([title, deadline, originization, place, 'mail',link['detail_file_link'], link['application_file_link'], link['other_file_link'], link['letter_file_link'] ])
