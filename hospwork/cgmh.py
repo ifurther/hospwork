@@ -49,7 +49,7 @@ class Cgmh(Hospital_work):
             return re.findall("\d+年\d+月\d+日",work_detail_web.rsplit('報名期限展延至')[1].split("止")[0].replace(' ',''))[0]
         elif '額滿' in work_detail_web:
             return '額滿為止'
-        elif '招募合適人選為止' in work_detail_web:
+        elif '招募合適人選為止' in work_detail_web or '徵到為止' in work_detail_web:
             return '招募合適人選為止'
         elif '隨到隨審' in work_detail_web:
             return '隨到隨審'
@@ -59,7 +59,10 @@ class Cgmh(Hospital_work):
             return '自即日起'
         elif '即日起至' in work_detail_web:
             if (new_work_detail_web := work_detail_web.rsplit('即日起至')[1]) and "止" in new_work_detail_web:
-                return clean_date(new_work_detail_web.split("止")[0].replace(' ',''), self.name)
+                if '截止' in new_work_detail_web:
+                    return clean_date(new_work_detail_web.split("截止")[0].replace(' ',''), self.name)
+                else:
+                    return clean_date(new_work_detail_web.split("止")[0].replace(' ',''), self.name)
             elif (new_work_detail_web := work_detail_web.rsplit('即日起至')[1]) and  "前" in work_detail_web:
                 return clean_date(new_work_detail_web.split("前")[0].replace(' ',''), self.name)
             elif "/" in work_detail_web.rsplit('即日起至')[1]:
@@ -119,7 +122,7 @@ class Cgmh(Hospital_work):
                 except:
                     print(work_page_soup)
                     raise AttributeError
-                if '長庚大學' in title:
+                if '長庚大學' in title or '長庚醫學科技股份有限公司' in title:
                     break
                 if (new_title :=  findjobtype(title, self.name)) and new_title != title:
 
@@ -144,7 +147,7 @@ class Cgmh(Hospital_work):
                 elif 'E-mail' in work_detail_web or re.search('\w+@\w+.\w+.\w+',work_detail_web):
                     resume_link = ''
                     apply_type = 'email'
-                elif '書面報名' in work_detail_web:
+                elif '書面報名' in work_detail_web or '郵戳為憑' in work_detail_web or '通訊報名' in work_detail_web:
                     resume_link = ''
                     apply_type = 'mail'                
                 else:
