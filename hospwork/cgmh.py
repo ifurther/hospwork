@@ -141,7 +141,7 @@ class Cgmh(Hospital_work):
                 else:
                     originzation = ''
                 dead_line = self.get_work_dead_line( work_detail_web ,title)
-                if '線上登錄履歷' in work_detail_web or '網路報名' in work_detail_web:
+                if '線上登錄履歷' in work_detail_web or '網路報名' in work_detail_web or '長庚全球資訊網公開招募人才' in work_detail_web:
                     resume_link = 'https://webapp.cgmh.org.tw/resume/adm.ASP'
                     apply_type = 'online'
                 elif 'E-mail' in work_detail_web or re.search('\w+@\w+.\w+.\w+',work_detail_web):
