@@ -140,7 +140,9 @@ class Cgmh(Hospital_work):
                     title = title.replace(originzation,'')
                 else:
                     originzation = ''
+
                 dead_line = self.get_work_dead_line( work_detail_web ,title)
+
                 if '線上登錄履歷' in work_detail_web or '網路報名' in work_detail_web:
                     resume_link = 'https://webapp.cgmh.org.tw/resume/adm.ASP'
                     apply_type = 'online'
@@ -164,6 +166,5 @@ class Cgmh(Hospital_work):
                 else:
                     if apply_type is not None:
                         work_table.append([title, originzation, region, dead_line, work_detail_link, apply_type, resume_link ])
-
                     else:
                         print(self.name,'Error find resume:',title_old,work_detail_link)
