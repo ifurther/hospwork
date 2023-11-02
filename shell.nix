@@ -1,8 +1,4 @@
-{ pkgs ? import (builtins.fetchTarball {
-    url = https://github.com/nixos/nixpkgs/archive/0d95d03c98f2ecef7c721cb6e0a638bbbff44d0a.tar.gz;
-    sha256="162dywda2dvfj1248afxc45kcrg83appjd0nmdb541hl7rnncf02";
-  }) {}
-}:
+{ pkgs ? import <nixpkgs> {} }:
 let
   r_pkgs = with pkgs.rPackages; [
     # rmarkdown-related packages.
@@ -29,10 +25,12 @@ pkgs.mkShell {
   name = "dev-shell";
   buildInputs = [ 
     pkgs.pipenv
+    pkgs.zlib
+    pkgs.postgresql
     python_pkgs
-    (pkgs.rWrapper.override {
-      packages = r_pkgs;
-    })
+    #(pkgs.rWrapper.override {
+    #  packages = r_pkgs;
+    #})
   ];
     # Set Environment Variables
   shellHook = ''
@@ -46,8 +44,11 @@ pkgs.mkShell {
 
     export VIRTUAL_ENV=$(pipenv --venv)
     export PIPENV_ACTIVE=1
-    export PYTHONPATH="$VIRTUAL_ENV/${python38.sitePackages}:$PYTHONPATH"
+    export PYTHONPATH="$VIRTUAL_ENV/${python_pkgs.sitePackages}:$PYTHONPATH"
+    export LD_LIBRARY_PATH="${pkgs.stdenv.cc.cc.lib.outPath}/lib:$LD_LIBRARY_PATH"
     export PATH="$VIRTUAL_ENV/bin:$PATH"
+
+    export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:${pkgs.lib.makeLibraryPath [ pkgs.zlib ]}"
   '';
 }
 
