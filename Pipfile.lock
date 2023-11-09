@@ -1838,6 +1838,7 @@
                 "sha256:3052a94929d9fb41e4fe33fc22c569e81e018b9454a923bd818599bf62ffd85a",
                 "sha256:b0aa1e7902d3808a698d4853f6dfe12fd02a0d9cb3851db3bf59703106d44a80"
             ],
+            "index": "pypi",
             "version": "==0.0.8"
         },
         "jupyter-lsp": {
