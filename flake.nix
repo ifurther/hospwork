@@ -12,37 +12,39 @@
     flake-utils,
     ...
     }:
-    let
-      pkgs = import nixpkgs { inherit system; };
-    in flake-utils.lib.eachDefaultSystem (system:
+    flake-utils.lib.eachDefaultSystem (system:
+      let
+        pkgs = import nixpkgs { inherit system; };
         python_pkgs = pkgs.python38.withPackages (ps: with ps; [
           pyflakes
           pytest
           venvShellHook
         ]);
+      in
       {
         devShells.default = pkgs.mkShell {
             packages = [
+              pkgs.autoPatchelfHook
               pkgs.pipenv
               pkgs.zlib
+              pkgs.glibc
               pkgs.postgresql
-              pkgs.autoPatchelfHook
               python_pkgs
               #(pkgs.rWrapper.override {
               #  packages = r_pkgs;
               #})
             ];
-              # Set Environment Variables
+            # Set Environment Variables
             shellHook = ''
               SOURCE_DATE_EPOCH=$(date +%s) # required for python wheels
 
-              local venv=$(pipenv --bare --venv &>> /dev/null)
+              venv=$(pipenv --bare --venv &>> /dev/null)
 
               if [[ -z $venv || ! -d $venv ]]; then
                 pipenv install --dev &>> /dev/null
               fi
 
-              autopatchelf venv
+              autoPatchelf venv
 
               export VIRTUAL_ENV=$(pipenv --venv)
               export PIPENV_ACTIVE=1
