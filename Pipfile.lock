@@ -2129,12 +2129,11 @@
         },
         "ipython": {
             "hashes": [
-                "sha256:2dcaad9049f9056f1fef63514f176c7d41f930daa78d05b82a176202818f2c14",
-                "sha256:3c86f284c8f3d8f2b6c662f885c4889a91df7cd52056fd02b7d8d6195d7f56e9"
+                "sha256:3910c4b54543c2ad73d06579aa771041b7d5707b033bd488669b4cf544e3b363",
+                "sha256:b0340d46a933d27c657b211a329d0be23793c36595acf9e6ef4164bc01a1804c"
             ],
             "index": "pypi",
-            "markers": "python_version >= '3.10'",
-            "version": "==8.22.2"
+            "version": "==8.12.3"
         },
         "ipython-genutils": {
             "hashes": [
@@ -2999,7 +2998,9 @@
                 "sha256:fdea4952db2793c4ad0bdccd27c1d8fdd1423a92f04598bc39425bcc2b8ee46e"
             ],
             "markers": "python_version >= '3.8'",
-            "version": "==0.18.0"
+==== BASE ====
+            "version": "==0.12.0"
+==== BASE ====
         },
         "send2trash": {
             "hashes": [
@@ -3011,11 +3012,15 @@
         },
         "setuptools": {
             "hashes": [
-                "sha256:02fa291a0471b3a18b2b2481ed902af520c69e8ae0919c13da936542754b4c56",
-                "sha256:5c0806c7d9af348e6dd3777b4f4dbb42c7ad85b190104837488eab9a7c945cf8"
+==== BASE ====
+                "sha256:4ac1475276d2f1c48684874089fefcd83bd7162ddaafb81fac866ba0db282a87",
+                "sha256:b454a35605876da60632df1a60f736524eb73cc47bbc9f3f1ef1b644de74fd2a"
+==== BASE ====
             ],
             "markers": "python_version >= '3.8'",
-            "version": "==69.1.1"
+==== BASE ====
+            "version": "==68.2.2"
+==== BASE ====
         },
         "six": {
             "hashes": [
