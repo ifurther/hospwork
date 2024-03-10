@@ -45,7 +45,7 @@ class Ntuh(Hospital_work):
             title = clean_unused_str(item['title'],self.name)
             origantion = item['jobDepno']
             begin_date = item['adate_sh']
-            if item['edatestr'] is not '':
+            if item['edatestr'] != '':
                 dead_line = clean_date(item['edatestr'].replace('至',''), self.name)
             else:
                 dead_line = 'please check page'
@@ -66,7 +66,7 @@ class Ntuh(Hospital_work):
             title = clean_unused_str(item['title'],self.name)
             origantion = item['jobDepno']
             begin_date = item['adate_sh']
-            if item['edatestr'] is not '':
+            if item['edatestr'] != '':
                 dead_line = clean_date(item['edatestr'].replace('至',''), self.name)
             else:
                 dead_line = 'please check page'
