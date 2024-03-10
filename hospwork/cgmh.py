@@ -161,7 +161,7 @@ class Cgmh(Hospital_work):
 
                 if '口試' in title_old or '筆試' in title_old or '甄試事宜' in title_old or '甄試日期' in title_old:
                     exam_table.append([title, originzation, region, dead_line, work_detail_link])
-                elif '甄試結果' in title_old:
+                elif '甄試結果' in title_old or '合格名單' in title_old:
                     admit_table.append([title, originzation, region, work_detail_link])
                 else:
                     if apply_type is not None:
