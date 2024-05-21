@@ -11,13 +11,19 @@ class Ntuh(Hospital_work):
     def __init__(self):
         self.name = '國立臺灣大學醫學院附設醫院'
         self.url_base='https://www.ntuh.gov.tw/ntuh'
-        self.url_work ='/RecruitAjax!nonDoctor.action'
+        self.url_work ='/Recruit.action'
+        self.url_ajax = '/RecruitAjax.action'
         self.url_admit = '/RecruitAjax!select.action'
-        self.url_full = super().url()
-        self.url_full_admit = super().get_url_full_admit()
+        self.url_work_full = super().url()
+        self.url_admit_full = super().get_url_full_admit()
 
-        ntuh_work_pages=requests.get(self.url_full)
-        ntuh_admit_pages=requests.get(self.url_full_admit)
+        self.admit_table = []
+        headers = { 'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36'}
+        ntuh_req = requests.get(self.url_work_full, headers=headers)
+        my_params = {'jobtype': '-1', 'q_seekValue': '','pagenum':'1'}
+
+        ntuh_work_pages=requests.get(self.url_base+self.url_ajax, params=my_params, cookies = ntuh_req.cookies)
+        ntuh_admit_pages=requests.get(self.url_admit_full)
         ntu_work_data=json.loads(ntuh_work_pages.content)
         ntu_admit_data=json.loads(ntuh_admit_pages.content)
         totalcount_work = ntu_work_data['totalcount']
@@ -26,13 +32,14 @@ class Ntuh(Hospital_work):
         totalPages_admit = ntu_admit_data['totalPages']
         work_table=[]
         for _page in range(1,totalPages_work):
-            g=requests.get(self.url_full+'?page='+str(_page))
+            my_params = {'jobtype': '-1', 'q_seekValue': '','pagenum':'{}'.format(str(_page))}
+            g=requests.get(self.url_base+self.url_ajax, params=my_params, cookies = ntuh_req.cookies, headers = headers)
             ntu_work_data=json.loads(g.content)
             self._get_ntuh_work_table_one_page(self.url_base,ntu_work_data,work_table)
         exam_table = []
         admit_table = []
         for _page in range(1,totalPages_admit):
-            g=requests.get(self.url_full_admit+'?page='+str(_page))
+            g=requests.get(self.url_admit_full+'?page='+str(_page))
             ntu_admit_data=json.loads(g.content)
             self._get_ntuh_admit_table_one_page(self.url_base, ntu_admit_data, exam_table, admit_table)
 
