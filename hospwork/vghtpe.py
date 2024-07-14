@@ -7,12 +7,24 @@ class Vghtpe(Hospital_work):
     def __init__(self):
         self.name = '台北榮民總醫院'
         self.local_zone = 'Taiwan'
-        self.url_base = 'https://www1.vghtpe.gov.tw/conscribe/'
-        self.url_work = 'indexb.htm?openExternalBrowser=1'
+        self.url_base = 'https://www1.vghtpe.gov.tw'
+        self.url_work = '/conscribe/indexb.htm?openExternalBrowser=1'
         self.url_full = super().url()
-        self.work_page_base = get_base_web_data(self.url_full)
+        self.url_admit = '/conscribe/indexa.htm?openExternalBrowser=1'
+
+        User_Agent = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36 Edg/92.0.902.78',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+            'Connection': 'keep-alive',
+            "Cache-Control": "no-cache",
+            "Priority": "u=4",
+            "Referer": "https://www.vghtpe.gov.tw/",
+            "Upgrade-Insecure-Requests": "1",
+        }
+
+        self.work_page_base = get_base_web_data(self.url_full, headers=User_Agent)
         self.work_tables = self.work_page_base.find_all('tr')
-        self.url_admit = 'indexa.htm?openExternalBrowser=1'
+
         self.admit_page_base = get_base_web_data(self.url_base+self.url_admit)
         self.admit_tables = self.admit_page_base.find_all('tr')
 
