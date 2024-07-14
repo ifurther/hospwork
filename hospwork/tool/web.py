@@ -1,12 +1,17 @@
 from bs4 import BeautifulSoup
 import requests
 
-def get_base_web_data(url_base,url_work_table_link=None):
+def get_base_web_data(url_base,headers=None,verify=None,url_work_table_link=None):
     if url_work_table_link != None:
         url = url_base + url_work_table_link
     else:
         url = url_base
-    g=requests.get(url)
+    if headers != None:
+        g=requests.get(url, headers)
+    if verify != None:
+        g=requests.get(url, verify=verify)
+    else:
+        g=requests.get(url)
     soup=BeautifulSoup(g.content, 'html.parser')
     return soup
 

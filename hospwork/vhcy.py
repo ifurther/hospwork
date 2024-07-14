@@ -4,6 +4,7 @@
 import pandas as pd
 import re
 from datetime import time
+from pathlib import Path
 import random
 from hospwork.hospital_work import Hospital_work
 from hospwork.tool.web import get_base_web_data,get_work_page
@@ -15,9 +16,12 @@ class Vhcy(Hospital_work):
         self.name = '臺中榮民總醫院嘉義分院'
         self.local_zone = 'Taiwan'
         self.url_base = 'https://www.vhcy.gov.tw'
-        self.url_work = '/PageView/RowView?WebMenuID=1c791b28-2968-49c9-8d5a-32dceca8ad1b'
+        self.url_work = '/UnitPage/RowView?WebMenuID=fb60be6b-ced8-485b-95dc-b470a3c4264f&UnitID=1f7b14c3-842f-4091-b3ca-4972e4c53524%20&UnitDefaultTemplate=1'
         self.url_full = super().url()
-        self.work_page_base = get_base_web_data(self.url_full)
+        if (cafile := Path().cwd().joinpath('cacert.pem')) and cafile.exists():
+            self.work_page_base = get_base_web_data(self.url_full, verify=cafile )
+        else:
+            self.work_page_base = get_base_web_data(self.url_full)
         self.work_page_work_table = self.work_page_base.find("tbody")
         self.pages_link = self._get_pages_link(self.work_page_base,self.url_base,self.url_full)
 
