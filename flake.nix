@@ -4,21 +4,34 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
+    poetry2nix = {
+      url = "github:nix-community/poetry2nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = input @ {
     self,
     nixpkgs,
     flake-utils,
+    poetry2nix,
     ...
     }:
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = import nixpkgs { inherit system; };
-        python_pkgs = pkgs.python38.withPackages (ps: with ps; [
+        python_pkgs = pkgs.python310.withPackages (ps: with ps; [
           pyflakes
           pytest
+
+          setuptools
+          wheel
+
           venvShellHook
+          pipenv-poetry-migrate
+
+          numpy
+          pandas
         ]);
       in
       {
@@ -29,6 +42,7 @@
               pkgs.zlib
               pkgs.glibc
               pkgs.postgresql
+              pkgs.poetry
               python_pkgs
               #(pkgs.rWrapper.override {
               #  packages = r_pkgs;
@@ -37,7 +51,7 @@
             # Set Environment Variables
             shellHook = ''
               SOURCE_DATE_EPOCH=$(date +%s) # required for python wheels
-
+              export PATH=${python_pkgs.python.interpreter}:$PATH
               venv=$(pipenv --bare --venv &>> /dev/null)
 
               if [[ -z $venv || ! -d $venv ]]; then
