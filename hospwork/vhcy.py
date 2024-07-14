@@ -19,6 +19,7 @@ class Vhcy(Hospital_work):
         self.url_work = '/UnitPage/RowView?WebMenuID=fb60be6b-ced8-485b-95dc-b470a3c4264f&UnitID=1f7b14c3-842f-4091-b3ca-4972e4c53524%20&UnitDefaultTemplate=1'
         self.url_full = super().url()
         if (cafile := Path().cwd().joinpath('cacert.pem')) and cafile.exists():
+            print('using the modify ca file {}'.format(cafile))
             self.work_page_base = get_base_web_data(self.url_full, verify=cafile )
         else:
             self.work_page_base = get_base_web_data(self.url_full)
