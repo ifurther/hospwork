@@ -30,7 +30,7 @@ django-heroku = "*"
 pillow = ">=9.1.1"
 tabulate = "*"
 wheel = ">=0.38.1"
-psycopg2 = ">=2.9.9"
+psycopg = ">=3.2.1"
 urllib3 = ">=1.26.18"
 ade = "*"
 

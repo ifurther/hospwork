@@ -1,3 +1,42 @@
+[tool.poetry]
+name = "hospwork"
+version = "0.1.0"
+description = ""
+authors = ["ifurther 55025025+ifurther@users.noreply.github.com"]
+
 [build-system]
 requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+bs4 = "*"
+pandas = "*"
+requests = ">=1.27.0"
+cssselect = "*"
+certifi = ">=2023.07.22"
+html5lib = "*"
+lxml = "*"
+altair = "*"
+sqlalchemy = "*"
+aiohttp = ">=3.8.1"
+django = ">=4.0.7, <5.0"
+gunicorn = "*"
+django-heroku = "*"
+pillow = ">=9.1.1"
+tabulate = "*"
+wheel = ">=0.38.1"
+psycopg = ">=3.2.1"
+urllib3 = ">=1.26.18"
+ade = "*"
+
+[tool.poetry.group.dev.dependencies]
+ipython = "*"
+ipykernel = "*"
+jupyter-contrib-nbextensions = "*"
+jupytemplate = "*"
+jupyter_http_over_ws = "*"
+pytest = ">=7.2.0"
+build = "*"
+pylint = "*"
+
