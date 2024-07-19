@@ -1,5 +1,6 @@
 import pandas as pd
 import re
+from pathlib import Path
 from hospwork.hospital_work import Hospital_work
 from hospwork.tool.web import get_base_web_data,get_work_page
 from hospwork.error import errormsg
@@ -11,12 +12,19 @@ class Hch(Hospital_work):
         self.url_base = 'https://www.hch.gov.tw'
         self.url_work = '/?aid=506&pid=0&page_name=list&pageNo=1'
         self.url_full = super().url()
-        self.work_page_base = get_base_web_data(self.url_full)
+        if (cafile := Path().cwd().joinpath('cacert.pem')) and cafile.exists():
+            print(self.name, 'using the modify ca file {}'.format(cafile))
+            self.work_page_base = get_base_web_data(self.url_full, verify=cafile )
+        else:
+            self.work_page_base = get_base_web_data(self.url_full)
         self.pages_link = self._get_pages_link(self.work_page_base, self.url_full)
 
         work_table = []
         for page in self.pages_link:
-            soup = get_base_web_data(page)
+            if (cafile := Path().cwd().joinpath('cacert.pem')) and cafile.exists():
+                soup = get_base_web_data(page, verify=cafile )
+            else:
+                soup = get_base_web_data(page)
             work_table = self._get_each_page_wrok_table(self.url_base,soup,work_table)
         self.work_table = pd.DataFrame(work_table, columns=['召聘職稱','期限' ,"召聘單位" , '院區', '報名方式', '報名簡章', '報名表', '作業基金現職人員申請院內外補同意書', '信封封面'])
         #self.admit_table = [] # no admit table
