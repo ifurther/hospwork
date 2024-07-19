@@ -19,7 +19,7 @@ class Vhcy(Hospital_work):
         self.url_work = '/UnitPage/RowView?WebMenuID=fb60be6b-ced8-485b-95dc-b470a3c4264f&UnitID=1f7b14c3-842f-4091-b3ca-4972e4c53524%20&UnitDefaultTemplate=1'
         self.url_full = super().url()
         if (cafile := Path().cwd().joinpath('cacert.pem')) and cafile.exists():
-            print('using the modify ca file {}'.format(cafile))
+            print(self.name, 'using the modify ca file {}'.format(cafile))
             self.work_page_base = get_base_web_data(self.url_full, verify=cafile )
         else:
             self.work_page_base = get_base_web_data(self.url_full)
@@ -30,7 +30,7 @@ class Vhcy(Hospital_work):
         exam_table = []
         admit_table = []
         for p_item in self.pages_link:
-            table_ = get_work_page(p_item)
+            table_ = self._get_work_page(p_item)
             work_table = self._get_work_table(self.url_base,table_,work_table,exam_table,admit_table)
 
         self.work_table=pd.DataFrame(work_table, columns=['召聘職稱','期限' ,"召聘單位" ,'報名簡章'])
@@ -49,16 +49,22 @@ class Vhcy(Hospital_work):
                 #print(o.text,link)
         return pages_link
 
+    def _get_work_page(self, link, cafile=None):
+        if (cafile := Path().cwd().joinpath('cacert.pem')) and cafile.exists():
+            return get_work_page(link, verify=cafile)
+        else:
+            return get_work_page(link)
+
     def get_work_detail(self,link):
         try:
             time.sleep(random.uniform(1, 5))
-            work_detail = get_work_page(link).find("div",class_="newContent").text
+            work_detail = self._get_work_page(link).find("div",class_="newContent").text
         except:
             return None
         if work_detail is None and work_detail.replace("\n","") == "":
             return None
         else:
-            return get_work_page(link).find("div",class_="newContent").text.replace("\r","").replace("\t","").split("\n")
+            return self._get_work_page(link).find("div",class_="newContent").text.replace("\r","").replace("\t","").split("\n")
 
 
 
