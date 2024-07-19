@@ -9,14 +9,14 @@ from . import Csmpt,Ylh,Ntuh,Cych,Vghks,Vghtpe,Hch,Ntucc,Vghtc,Cgmh,Vhcy
 from .io.sqlite import to_sqlite
 
 def main():
-    csmpt, ylh, ntuh, vghks, vghtpe, hch, ntucc, vghtc, cgmh = Csmpt(), Ylh(), Ntuh(), Vghks(), Vghtpe(), Hch(), Ntucc(), Vghtc(), Cgmh()
+    csmpt, ylh, ntuh, vghks, hch, ntucc, vghtc, cgmh = Csmpt(), Ylh(), Ntuh(), Vghks(), Hch(), Ntucc(), Vghtc(), Cgmh()
 
 
     Full_work_table=[]
     Full_exam_table=[]
     Full_admit_table=[]
     with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
-        for cc in [csmpt, ylh, ntuh, hch, ntucc, vghks, vghtpe, vghtc, cgmh]:
+        for cc in [csmpt, ylh, ntuh, hch, ntucc, vghks, vghtc, cgmh]:
             executor.map(cc.get_full_work_table())
             Full_work_table.append(cc.get_full_work_table())
 
