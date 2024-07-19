@@ -11,5 +11,6 @@ from .cych import Cych
 from .vghtc import Vghtc
 from .vhcy import Vhcy
 from .tool.web import get_base_web_data,get_work_page
+from .tool.job import findjobtype,findjoboriginzation
 
 __all__ = ["__main__", "hospital_work", "tool", "cgmh", "cych", "hch","ntuh", "ntucc", "vhcy", "vghtc", "vghtpe", "vghks", "ylh"]
