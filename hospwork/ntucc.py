@@ -29,9 +29,9 @@ class Ntucc(Hospital_work):
             ntucc_work_data = json.loads(requests.get(self.url_base+self.url_ajax,params=my_params, cookies = g.cookies, headers = headers).content)
             work_table=self._get_ntuh_work_table_one_page(ntucc_work_data, work_table)
 
-        self.work_table=pd.DataFrame(work_table, columns=['召聘職稱','召聘單位','期限' ,'報名方式', '報名簡章', '報名表(doc)', '報名表(odt)', '報名表(pdf)', '信封封面'])
+        self.work_table=pd.DataFrame(work_table, columns=['召聘職稱','召聘單位', '院區','期限' ,'報名方式', '報名簡章', '報名表(doc)', '報名表(odt)', '報名表(pdf)', '信封封面'])
         #print('totalcount: {} getdatacount:{}'.format(totalcount,len(work_table)))
-        self.admit_table = pd.DataFrame(self.admit_table, columns=["召聘職稱", "召聘單位", "連結"])
+        self.admit_table = pd.DataFrame(self.admit_table, columns=["召聘職稱", "召聘單位", '院區', "連結"])
 
     def _get_file_link(self,id):
         return self.url_base+self.url_ajax.replace('.action','')+'!download.action?id='+id
@@ -40,6 +40,9 @@ class Ntucc(Hospital_work):
         for i, item in enumerate(ntucc_work_data['queryList']):
             title = item['title']
             origantion = item['jobDepnm']
+            if origantion != None and ( new_title := title.replace(origantion,'') ) and new_title != title:
+                title = new_title
+            zone = '癌醫中心'
             begin_date = item['adate_sh']
             dead_line = item['edate_sh']
             file_list = {}
@@ -74,18 +77,18 @@ class Ntucc(Hospital_work):
                     file_list['second_admit_file_link'] = self._get_file_link(_file['id'])
 
             if 'first_admit_file_link' in file_list:
-                self.admit_table.append([title, origantion, file_list['first_admit_file_link']])
+                self.admit_table.append([title, origantion, zone, file_list['first_admit_file_link']])
             if 'second_admit_file_link' in file_list:
-                self.admit_table.append([title, origantion, file_list['second_admit_file_link']])
+                self.admit_table.append([title, origantion, zone, file_list['second_admit_file_link']])
 
             if 'application_file_doc_link' not in file_list and 'application_file_odt_link' not in file_list:
                 try:
-                    work_table.append([title, origantion, dead_line, 'online', file_list['detail_file_link'], '', '', '',''])
+                    work_table.append([title, origantion, zone, dead_line, 'online', file_list['detail_file_link'], '', '', '',''])
                 except KeyError as ke:
                     print(self.name,title,'error input in table',ke)
             else:
                 try:
-                    work_table.append([title, origantion, dead_line, 'mail', file_list['detail_file_link'], file_list['application_file_doc_link'], file_list['application_file_odt_link'], file_list['application_file_pdf_link'], file_list['letter_file_link']])
+                    work_table.append([title, origantion, zone, dead_line, 'mail', file_list['detail_file_link'], file_list['application_file_doc_link'], file_list['application_file_odt_link'], file_list['application_file_pdf_link'], file_list['letter_file_link']])
                 except KeyError as ke:
                     print(self.name,title,'error input in table',ke)
 
