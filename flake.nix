@@ -33,6 +33,10 @@
           numpy
           pandas
         ]);
+        python12_pkgs = pkgs.python312.withPackages (ps: with ps; [
+          jupyterlab-git
+          bash-kernel
+        ]);
       in
       {
         devShells.default = pkgs.mkShell {
@@ -44,6 +48,7 @@
               pkgs.postgresql
               pkgs.poetry
               python_pkgs
+              python12_pkgs
               #(pkgs.rWrapper.override {
               #  packages = r_pkgs;
               #})
