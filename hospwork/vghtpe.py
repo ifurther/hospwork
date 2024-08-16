@@ -1,7 +1,11 @@
 import pandas as pd
+import requests
+from bs4 import BeautifulSoup
+from pathlib import Path
 from hospwork.hospital_work import Hospital_work
 from hospwork.tool.web import get_base_web_data,get_work_page
-
+from hospwork.tool.httpadapter import TLSAdapter
+from hospwork.tool.time import clean_date
 
 class Vghtpe(Hospital_work):
     def __init__(self):
@@ -20,10 +24,22 @@ class Vghtpe(Hospital_work):
             "Priority": "u=4",
         }
 
-        self.work_page_base = get_base_web_data(self.url_full, headers=headers)
+        session = requests.Session()
+        adapter = TLSAdapter()
+        session.mount('https://',adapter)
+        if (cafile := Path().cwd().joinpath('cacert.pem')) and cafile.exists():
+            print(self.name, 'using the modify ca file {}'.format(cafile))
+            self.work_page_base_raw = session.get(self.url_full, headers=headers, verify=cafile)
+        else:
+            self.work_page_base_raw = session.get(self.url_full, headers=headers)
+        self.work_page_base = BeautifulSoup(self.work_page_base_raw.content, 'html.parser')
         self.work_tables = self.work_page_base.find_all('tr')
 
-        self.admit_page_base = get_base_web_data(self.url_base+self.url_admit, headers = User_Agent)
+        if (cafile := Path().cwd().joinpath('cacert.pem')) and cafile.exists():
+            self.admit_page_base_raw = session.get(self.url_base+self.url_admit, headers = headers, verify=cafile)
+        else:
+            self.admit_page_base_raw = session.get(self.url_base+self.url_admit, headers = headers)
+        self.admit_page_base = BeautifulSoup(self.admit_page_base_raw.content, 'html.parser')
         self.admit_tables = self.admit_page_base.find_all('tr')
 
         work_table=[]
@@ -33,7 +49,7 @@ class Vghtpe(Hospital_work):
                 first_td = item.find('td')
                 title = first_td.string
                 origantion = first_td.find_next_siblings('td')[0].string
-                dead_line = first_td.find_next_siblings('td')[2].string
+                dead_line = clean_date(first_td.find_next_siblings('td')[2].string.replace('即日起至',''),self.name)
                 #print('#{}召聘職稱: {} 召聘單位: {}\n 期限: {}\n 連結：{}{}'.format(i+1, title, origantion, dead_line, self.url_base, s.get('href')))
                 work_table.append([title, origantion, dead_line, self.url_base+s.get('href')])
         self.work_table=pd.DataFrame(work_table, columns=['召聘職稱','召聘單位','期限' ,'連結'])
@@ -45,8 +61,10 @@ class Vghtpe(Hospital_work):
                 first_td = item.find('td')
                 title = first_td.string
                 origantion = first_td.find_next_siblings('td')[0].string
-                dead_line = first_td.find_next_siblings('td')[2].string
+                if (dead_line_raw:=first_td.find_next_siblings('td')[2].string) and dead_line_raw is not None:
+                    dead_line = clean_date(dead_line_raw.replace('即日起至',''),self.name)
                 #print('#{}召聘職稱: {} 召聘單位: {}\n 期限: {}\n 連結：{}{}'.format(i+1, title, origantion, dead_line, self.url_base, s.get('href')))
                 admit_table.append([title, origantion, dead_line, self.url_base+s.get('href')])
         self.admit_table=pd.DataFrame(admit_table, columns=['召聘職稱','召聘單位','期限' ,'連結'])
+
 
