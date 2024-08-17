@@ -1,11 +1,11 @@
 from urllib.parse import urlparse
 import datetime
 import pandas as pd
-from hospwork.hospital_work import Hospital_work
+from hospwork.hospital_work import Hospitalwork
 from hospwork.tool.web import get_base_web_data,get_work_page
 from hospwork.tool.job import clean_unused_str
 
-class Vghks(Hospital_work):
+class Vghks(Hospitalwork):
     def __init__(self):
         self.name = '高雄榮民總醫院'
         self.url_base = 'https://www.vghks.gov.tw'

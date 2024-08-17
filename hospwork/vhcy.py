@@ -6,12 +6,12 @@ import re
 from datetime import time
 from pathlib import Path
 import random
-from hospwork.hospital_work import Hospital_work
+from hospwork.hospital_work import Hospitalwork
 from hospwork.tool.web import get_base_web_data,get_work_page
 from hospwork.tool.job import findjobtype,findjoboriginzation,clean_unused_str
 
 
-class Vhcy(Hospital_work):
+class Vhcy(Hospitalwork):
     def __init__(self):
         self.name = '臺中榮民總醫院嘉義分院'
         self.local_zone = 'Taiwan'

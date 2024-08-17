@@ -1,11 +1,11 @@
 import pandas as pd
 import re
 from pathlib import Path
-from hospwork.hospital_work import Hospital_work
+from hospwork.hospital_work import Hospitalwork
 from hospwork.tool.web import get_base_web_data,get_work_page
 from hospwork.error import errormsg
 
-class Hch(Hospital_work):
+class Hch(Hospitalwork):
     def __init__(self):
         self.name = '國立臺灣大學醫學院附設醫院新竹臺大分院'
         self.local_zone = 'Taiwan'
