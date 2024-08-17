@@ -1,12 +1,12 @@
 import pandas as pd
 import re
-from hospwork.hospital_work import Hospital_work
+from hospwork.hospital_work import Hospitalwork
 from hospwork.tool.web import get_base_web_data,get_work_page
 from hospwork.error import errormsg
 from urllib.parse import urlparse
 
 
-class Kmsh(Hospital_work):
+class Kmsh(Hospitalwork):
     def __init__(self):
         self.name = '高雄市立小港醫院'
         self.url_base = 'https://www.kmsh.org.tw/affairs/6300_file/HRDataBase/'
