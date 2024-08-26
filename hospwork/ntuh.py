@@ -2,6 +2,7 @@ import pandas as pd
 import re
 import requests
 import json
+import datetime
 from hospwork.hospital_work import Hospitalwork
 from hospwork.tool.web import get_base_web_data,get_work_page
 from hospwork.tool.job import clean_unused_str
@@ -53,7 +54,8 @@ class Ntuh(Hospitalwork):
             origantion = item['jobDepno']
             begin_date = item['adate_sh']
             if item['edatestr'] != '':
-                dead_line = clean_date(item['edatestr'].replace('至',''), self.name)
+                #dead_line = clean_date(item['edatestr'], self.name)
+                dead_line = datetime.datetime.strptime(item["odate"],"%Y-%m-%dT%H:%M:%S").date()
             else:
                 dead_line = 'please check page'
 
