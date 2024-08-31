@@ -1,10 +1,10 @@
 import pandas as pd
 import re
-from hospwork.hospital_work import Hospital_work
+from hospwork.hospital_work import Hospitalwork
 from hospwork.tool.web import get_base_web_data,get_work_page
 
 
-class Cych(Hospital_work):
+class Cych(Hospitalwork):
     def __init__(self):
         self.name = '嘉義基督教醫院'
         self.url_base = 'https://www.cych.org.tw/cychweb/cych3/'

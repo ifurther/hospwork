@@ -1,10 +1,11 @@
 from urllib.parse import urlparse
+import datetime
 import pandas as pd
-from hospwork.hospital_work import Hospital_work
+from hospwork.hospital_work import Hospitalwork
 from hospwork.tool.web import get_base_web_data,get_work_page
 from hospwork.tool.job import clean_unused_str
 
-class Vghks(Hospital_work):
+class Vghks(Hospitalwork):
     def __init__(self):
         self.name = '高雄榮民總醫院'
         self.url_base = 'https://www.vghks.gov.tw'
@@ -66,7 +67,8 @@ class Vghks(Hospital_work):
                     link_s = urlparse(self.url_full)._replace(path=link,query=[]).geturl()
                     all_td = item.find_all('td')
                     origination = all_td[1].find('p').text
-                    dead_line = all_td[-1].find('p').text
+                    _dead_line = all_td[-1].find('p').text.split('-')
+                    dead_line = datetime.date(int(_dead_line[0])+1911,int(_dead_line[1]),int(_dead_line[2]))
                     title=title.replace(origination,'')
                     #print(i,title,link_s,origination,dead_line)
                     work_table.append([title, dead_line, origination, link_s ])

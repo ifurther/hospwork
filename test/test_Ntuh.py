@@ -13,4 +13,3 @@ def test_ntuh():
     assert isinstance(ntuh.admit_table,pd.DataFrame)
     assert not ntuh.work_table.empty, "the work_table is non empty"
     assert not ntuh.admit_table.empty, "the admit_table is non empty"
-    

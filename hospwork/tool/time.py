@@ -6,9 +6,9 @@ def transfer_year(time_raw):
     if (roc_year := int(roc_date.split('-')[0]) ) and roc_year < 1911 and abs( (roc_year + 1911) - datetime.date.today().year) <= 3:
         time_new = roc_date.replace(roc_date.split('-')[0],str(roc_year + 1911))
     else:
-        time_new = roc_date   
+        time_new = roc_date
     return time_new
- 
+
 def clean_date(time_raw,hosp_name,dtype='str'):
     '''tansfer date'''
     if (time_:= re.sub('[年,月]','-',time_raw.replace('日','')) ) and time_ != time_raw:

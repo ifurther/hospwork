@@ -1,13 +1,13 @@
 import pandas as pd
 import re
-from hospwork.hospital_work import Hospital_work
+from hospwork.hospital_work import Hospitalwork
 from hospwork.tool.web import get_base_web_data,get_work_page
 from hospwork.tool.job import findjoboriginzation,findjobtype,clean_unused_str
 from hospwork.tool.time import clean_date
 from hospwork.error import errormsg
 from urllib.parse import urlparse
 
-class Cgmh(Hospital_work):
+class Cgmh(Hospitalwork):
     def __init__(self):
         self.name = '長庚醫院'
         self.local_zone = 'Taiwan'
@@ -154,14 +154,14 @@ class Cgmh(Hospital_work):
                     apply_type = 'email'
                 elif '書面報名' in work_detail_web or '郵戳為憑' in work_detail_web or '通訊報名' in work_detail_web:
                     resume_link = ''
-                    apply_type = 'mail'                
+                    apply_type = 'mail'
                 else:
                     resume_link = None
                     apply_type = None
 
-                if '口試' in title_old or '筆試' in title_old or '甄試事宜' in title_old or '甄試日期' in title_old:
+                if '口試' in title_old or '筆試' in title_old or '甄試事宜' in title_old or '甄試日期' in title_old or '甄試名單' in title_old:
                     exam_table.append([title, originzation, region, dead_line, work_detail_link])
-                elif '甄試結果' in title_old:
+                elif '甄試結果' in title_old or '合格名單' in title_old:
                     admit_table.append([title, originzation, region, work_detail_link])
                 else:
                     if apply_type is not None:

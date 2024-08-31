@@ -2,12 +2,12 @@ import pandas as pd
 import re
 import requests
 import json
-from hospwork.hospital_work import Hospital_work
+from hospwork.hospital_work import Hospitalwork
 from hospwork.tool.web import get_base_web_data,get_work_page
 from hospwork.tool.job import clean_unused_str
 from hospwork.tool.time import clean_date
 
-class Skh(Hospital_work):
+class Skh(Hospitalwork):
     def __init__(self):
         self.name = '新光醫院'
         self.url_base='https://recruitweb.skh.org.tw'

@@ -1,10 +1,10 @@
 import pandas as pd
 import re
-from hospwork.hospital_work import Hospital_work
+from hospwork.hospital_work import Hospitalwork
 from hospwork.tool.web import get_base_web_data,get_work_page
 from hospwork.tool.job import findjoboriginzation,findjobtype,clean_unused_str
 
-class Vghtc(Hospital_work):
+class Vghtc(Hospitalwork):
     def __init__(self):
         self.name = '臺中榮民總醫院'
         self.local_zone = 'Taiwan'
