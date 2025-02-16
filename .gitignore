@@ -1,11 +1,7 @@
 .vscode/settings.json
 */.ipynb_checkpoints/*
-<<<<<<< HEAD
 **/.ipynb_checkpoints/*
-=======
-*/*/.ipynb_checkpoints/*
-*/*/*/.ipynb_checkpoints/*
->>>>>>> ef7d96f (hospwork: update gitignore)
+**/*.ipynb_checkpoints/
 .ipynb_checkpoints/*
 
 */__pycache__/*
