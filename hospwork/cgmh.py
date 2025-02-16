@@ -49,7 +49,7 @@ class Cgmh(Hospitalwork):
             return re.findall("\d+年\d+月\d+日",work_detail_web.rsplit('報名期限展延至')[1].split("止")[0].replace(' ',''))[0]
         elif '額滿' in work_detail_web:
             return '額滿為止'
-        elif '招募合適人選為止' in work_detail_web or '徵到為止' in work_detail_web:
+        elif '招募合適人選為止' in work_detail_web or '招募到合適⼈選為' in work_detail_web or '徵到為止' in work_detail_web:
             return '招募合適人選為止'
         elif '隨到隨審' in work_detail_web:
             return '隨到隨審'
