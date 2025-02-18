@@ -33,7 +33,7 @@ class CgumhSpider(scrapy.Spider):
                 job_link, self.parse_details, meta={"item": item}
             )
 
-        #next_page = response.xpath("//ul[@class='layout__pagination ul-reset']/li/a/@href").getall()[-1].replace("#list",'')
+        next_page = response.xpath("//ul[@class='layout__pagination ul-reset']/li/a/@href").getall()[-1].replace("#list",'')
 
         if next_page and next_page != "javascript:void(0)":
             next_page_urlparse = urlparse(next_page)
