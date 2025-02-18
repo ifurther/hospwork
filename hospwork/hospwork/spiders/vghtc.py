@@ -17,7 +17,7 @@ class VghtcSpider(scrapy.Spider):
 
         url_query = dict(parse_qsl(urlparse(response.request.url).query))
 
-        next_page = response.xpath("//*[@id="content"]/div[@id="pager"]/@href").getall()[-1].replace("#list",'')
+        next_page = response.xpath("//div[@id='content']/div//div[@class='pager']/a/@href").getall()[-1].replace("#list",'')
         if next_page and next_page != "javascript:void(0)":
             next_page_urlparse = urlparse(next_page)
             next_query = dict(parse_qsl(next_page_urlparse.query))
