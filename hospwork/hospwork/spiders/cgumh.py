@@ -15,18 +15,14 @@ class CgumhSpider(scrapy.Spider):
         ]
 
     def parse(self, response):
-        # <processing code not shown>
+        # Load scarpy item for hospwork
         item = HospworkItem()
-        # populate `item` fields
-        # and extract item_details_url
+        # get url_query for next page
         url_query = dict(parse_qsl(urlparse(response.request.url).query))
 
         for job in response.xpath("//div[@id='list']/div/ul[@class='ul-reset']/li"):
-            #NAME_SELECTOR = 'div.fz-20.block ::text'
-            RRP_SELECTOR = 'a ::attr(href)'
-            #job_title = job.css(NAME_SELECTOR).get()
-            job_link = response.urljoin(job.css(RRP_SELECTOR).extract_first())
-            #hosp_region = self.get_hosp_region(job_title)
+            JOB_SELECTOR = 'a ::attr(href)'
+            job_link = response.urljoin(job.css(JOB_SELECTOR).extract_first())
             item['data_source'] = 'cgmh'
             item['hosp_name'] = '長庚醫院'
             #item['job_name'] = job_title
