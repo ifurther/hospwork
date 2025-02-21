@@ -26,10 +26,10 @@ def findjoboriginzation(job_name,name) -> str:
     The result will origin job_name
     '''
     try:
-        return re.search(r"([風,胃,實,失,醫,秘,核,運,腎,心,生,婦,神,5,管,新,教,影,癌,血,牙,腦,骨,巨,工,傳,耳,放,復,營,資,護,家,胸,皮,泌,眼,外,藥,麻,臨,人,急,主,病,兒,環,健,社](\w+||)[科,部,室,心,課,處,房,局,組,庫])|([內,中](\w+||)[科,局])",job_type.replace(name,"")).group(0)
+        return re.search(r"([風,胃,實,失,醫,秘,核,運,腎,心,生,婦,神,5,管,新,教,影,癌,血,牙,腦,骨,巨,工,傳,耳,放,復,營,資,護,家,胸,皮,泌,眼,外,藥,麻,臨,人,急,主,病,兒,環,健,社](\w+||)[科,部,室,心,課,處,房,局,組,庫])|([內,中](\w+||)[科,局])",job_name.replace(name,"")).group(0)
     except AttributeError:
-        print("{} Error find originzation: {}".format(name, job_type))
+        print("{} Error find originzation: {}".format(name, job_name))
         return job_name
     except re.error as Re:
-        print("{} Error find originzation: {}, its error: {}".format(name, job_type,Re))
+        print("{} Error find originzation: {}, its error: {}".format(name, job_name,Re))
         return job_name
